@@ -3,12 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.auth import router as auth_router
+from app.api.analysis import router as analysis_router
+
+# Import database models to ensure they are registered with the declarative Base
+# before calling create_all. This guarantees SQLite tables are generated on start.
+from app.models.user import User
+from app.models.analysis import Analysis
 
 # Automatically create the database tables.
 # Base.metadata.create_all looks at all classes that inherit from 'Base' 
-# (like our User model) and creates the corresponding tables if they do not exist.
-# In a large production project, database migrations (using Alembic) are preferred.
-# For our MVP and initial development, this automatic schema creation is ideal and clean.
+# and creates the corresponding tables if they do not exist.
 Base.metadata.create_all(bind=engine)
 
 # Create the core FastAPI application instance.
@@ -19,9 +23,6 @@ app = FastAPI(
 )
 
 # CORS (Cross-Origin Resource Sharing) middleware configuration.
-# The frontend (React running on http://localhost:5173) is a different 'origin'
-# than our backend (FastAPI running on http://localhost:8000). 
-# Web browsers block cross-origin requests by default unless the server explicitly allows them.
 origins = [
     "http://localhost:5173",  # React local development server
     "http://127.0.0.1:5173"
@@ -35,8 +36,9 @@ app.add_middleware(
     allow_headers=["*"],         # Allows any headers (like Authorization, Content-Type)
 )
 
-# Mount our authentication router under the /api prefix.
+# Mount our authentication and analysis routers under the /api prefix.
 app.include_router(auth_router, prefix="/api")
+app.include_router(analysis_router, prefix="/api")
 
 @app.get("/")
 def read_root():

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 # This class defines the database table schema for users.
@@ -26,3 +27,6 @@ class User(Base):
     
     # onupdate=func.now() automatically updates this field whenever the user row is modified.
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    # Establish relationship to analyses. When a user is deleted, delete all their analyses.
+    analyses = relationship("Analysis", back_populates="user", cascade="all, delete-orphan")
