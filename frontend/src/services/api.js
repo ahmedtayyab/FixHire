@@ -11,7 +11,7 @@ async function request(endpoint, options = {}) {
   const token = localStorage.getItem("fixhire_token");
   
   const headers = {
-    "Content-Type": "application/json",
+    ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
     ...options.headers,
   };
   
@@ -62,6 +62,33 @@ export const api = {
     // Re-hydrates state by fetching the current user using the saved token.
     async getMe() {
       return request("/auth/me");
+    },
+  },
+
+  analysis: {
+    // Analyze resume file + job title and description
+    async analyze(jobTitle, jobDescription, file) {
+      const formData = new FormData();
+      formData.append("job_title", jobTitle);
+      formData.append("job_description", jobDescription);
+      formData.append("file", file);
+
+      return request("/analysis/analyze", {
+        method: "POST",
+        body: formData,
+      });
+    },
+
+    // Retrieve history list
+    async getHistory() {
+      return request("/analysis/history");
+    },
+
+    // Delete past analysis
+    async deleteAnalysis(id) {
+      return request(`/analysis/${id}`, {
+        method: "DELETE",
+      });
     },
   },
 };
