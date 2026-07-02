@@ -48,7 +48,7 @@ class GeminiAnalysisResult(BaseModel):
     missing_skills: List[str] = Field(description="Key skills, technologies, or concepts from the job description that are absent or weak in the resume")
     improvement_suggestions: List[str] = Field(description="Actionable and specific tips to improve the resume for this job description (e.g., formatting, metrics, wording)")
     star_bullet_points: List[STARBulletPoint] = Field(description="3 to 5 examples of original resume lines rewritten into high-impact STAR format")
-    cover_letter: str = Field(description="A highly tailored, professional 3-4 paragraph cover letter (~300-400 words) using the candidate's background and addressing the job requirements")
+    cover_letter: str = Field(description="A highly tailored, professional 3-4 paragraph cover letter (~300-400 words) using the candidate's background and addressing the job requirements. IMPORTANT: You MUST use double newlines ('\\n\\n') between the salutation, each body paragraph, and the closing signature so that the output is formatted as a professional letter.")
     recruiter_summary: str = Field(description="A 2-3 sentence professional snapshot of the candidate's fit, strengths, and primary gap for recruiters")
     interview_questions: List[InterviewQuestion] = Field(description="3 to 5 personalized interview questions with answering tips based on the candidate's background and the job")
 
@@ -90,7 +90,7 @@ def analyze_resume(
     if has_api_key:
         try:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel(settings.GEMINI_MODEL_NAME)
             
             prompt = f"""
 You are an expert ATS (Applicant Tracking System) advisor and recruiter.
@@ -104,6 +104,14 @@ JOB DESCRIPTION:
 
 CANDIDATE RESUME TEXT:
 {resume_text}
+
+For the 'cover_letter' field in the JSON output, you MUST format the letter professionally. Use double newlines ('\\n\\n') to separate:
+1. The salutation (e.g., 'Dear Hiring Manager,')
+2. Each body paragraph (3-4 distinct paragraphs with clear spacing)
+3. The closing/sign-off (e.g., 'Sincerely,')
+4. The candidate's name
+
+Do NOT output the cover letter as a single continuous block of text or run paragraphs/sentences together.
 
 Strictly generate output fitting the specified JSON schema.
 """

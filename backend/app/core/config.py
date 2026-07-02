@@ -20,11 +20,14 @@ class Settings(BaseSettings):
     
     # Gemini API Key for processing candidate resumes and recruiter insights.
     GEMINI_API_KEY: str | None = None
+    
+    # Gemini Model Name (defaulting to the stable gemini-2.5-flash, as gemini-1.5-flash is deprecated/decommissioned)
+    GEMINI_MODEL_NAME: str = "gemini-2.5-flash"
 
-    # SettingsConfigDict tells Pydantic to read environment variables from a .env file
-    # located in the current working directory, and makes it case-insensitive.
+    # SettingsConfigDict tells Pydantic to read environment variables from a .env file.
+    # We search both the current directory and the parent directory to accommodate different process roots.
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=[".env", "../.env"],
         env_file_encoding="utf-8",
         extra="ignore"
     )
