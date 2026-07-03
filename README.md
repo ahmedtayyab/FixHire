@@ -34,10 +34,53 @@ FixHire is a modern SaaS recruitment application designed to assist both candida
   - Designed a database-backed history tracker for resume scans.
   - Added a sidebar in the Candidate Dashboard allowing users to retrieve past optimization scans or delete them.
 
+### Phase 3: Recruiter Portal & Job Screening (Completed)
+- **Job Posting Management**:
+  - Added `Job` and `CandidateScreening` database models with recruiter ownership and cascade deletes.
+  - Built REST endpoints for creating, listing, viewing, and deleting job postings (`/api/jobs`).
+  - Implemented a full Recruiter Dashboard with job creation modal, job list sidebar, and shareable apply links.
+- **AI-Powered Bulk Resume Screening**:
+  - Recruiters can upload up to 10 PDF resumes at once against a job posting (`/api/jobs/{id}/screen`).
+  - Gemini generates structured screening dossiers: compatibility score, fit summary, strengths, gaps, experience matches, interview questions, and hire recommendation.
+  - Mock screening fallback runs automatically when no Gemini API key is configured.
+- **Candidate Screening Workspace**:
+  - Sortable and filterable screening table with score badges and recommendation labels.
+  - Side-by-side candidate dossier panel with overview, experience matches, and interview prep tabs.
+  - View extracted resume text inline; open the original PDF in a new tab.
+  - Delete individual screening reports or entire job postings with associated data.
+- **Public Job Application Flow**:
+  - Added a public apply page at `/apply/:jobId` (no login required).
+  - Candidates submit name, email, and PDF resume; AI screening runs on submission (`/api/jobs/{id}/apply`).
+  - Post-submission confirmation screen shows compatibility score, fit summary, and key strengths.
+- **Resume PDF Storage**:
+  - Original PDFs are persisted to `backend/uploads/screenings/` and stored in the database.
+  - Startup backfill restores PDFs for legacy screenings from matching filenames in the workspace.
+  - Secure PDF download endpoint for recruiters (`/api/jobs/screenings/{id}/pdf`).
+- **Login UX Improvements**:
+  - Two-step login flow: select Candidate or Recruiter role first, then enter credentials.
+  - Role mismatch validation prevents signing in with the wrong portal selected.
+
 ### Recent Refinements & Fixes
 - **Gemini Model Upgrade**: Switched the default model to `gemini-2.5-flash` in the backend settings (as `gemini-1.5-flash` is now decommissioned).
 - **Flexible Environment Loading**: Updated settings initialization to load `.env` from either the backend root or the parent directory (`[".env", "../.env"]`). This prevents configuration loading issues regardless of whether the server is started from `/backend` or the workspace root.
 - **Cover Letter Formatting**: Refined the prompts sent to Gemini to enforce double newlines (`\n\n`) between the salutation, paragraphs, and closing signature to ensure the cover letter formats as a professional, readable document.
+- **Screening PDF Backfill**: Fixed "Open CV" for screenings created before PDF storage was enabled by backfilling from disk and matching source filenames on startup.
+
+---
+
+## API Endpoints (Phase 3)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/jobs` | Recruiter | Create a job posting |
+| `GET` | `/api/jobs` | Recruiter | List recruiter's job postings |
+| `GET` | `/api/jobs/{id}` | Recruiter | Get job details with screenings |
+| `DELETE` | `/api/jobs/{id}` | Recruiter | Delete job and all screenings |
+| `POST` | `/api/jobs/{id}/screen` | Recruiter | Bulk screen PDF resumes |
+| `GET` | `/api/jobs/{id}/public` | Public | Get job info for apply page |
+| `POST` | `/api/jobs/{id}/apply` | Public | Submit candidate application |
+| `GET` | `/api/jobs/screenings/{id}/pdf` | Recruiter (token) | Download original resume PDF |
+| `DELETE` | `/api/jobs/screenings/{id}` | Recruiter | Delete a screening report |
 
 ---
 

@@ -91,4 +91,70 @@ export const api = {
       });
     },
   },
+
+  jobs: {
+    // Create new job posting
+    async create(jobData) {
+      return request("/jobs", {
+        method: "POST",
+        body: JSON.stringify(jobData),
+      });
+    },
+
+    // List recruiter's job postings
+    async list() {
+      return request("/jobs");
+    },
+
+    // Retrieve single job's details + associated screenings
+    async get(id) {
+      return request(`/jobs/${id}`);
+    },
+
+    // Delete job posting
+    async delete(id) {
+      return request(`/jobs/${id}`, {
+        method: "DELETE",
+      });
+    },
+
+    // Bulk screen resumes against a job
+    async screen(jobId, files) {
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("files", file);
+      }
+
+      return request(`/jobs/${jobId}/screen`, {
+        method: "POST",
+        body: formData,
+      });
+    },
+
+    // Delete a candidate screening report
+    async deleteScreening(screeningId) {
+      return request(`/jobs/screenings/${screeningId}`, {
+        method: "DELETE",
+      });
+    },
+
+    // Retrieve public job info for candidate apply page
+    async getPublicJob(id) {
+      return request(`/jobs/${id}/public`);
+    },
+
+    // Submit a public job application
+    async submitApplication(jobId, name, email, file) {
+      const formData = new FormData();
+      formData.append("candidate_name", name);
+      formData.append("candidate_email", email);
+      formData.append("file", file);
+
+      return request(`/jobs/${jobId}/apply`, {
+        method: "POST",
+        body: formData,
+      });
+    },
+  },
 };
+

@@ -30,3 +30,7 @@ class User(Base):
 
     # Establish relationship to analyses. When a user is deleted, delete all their analyses.
     analyses = relationship("Analysis", back_populates="user", cascade="all, delete-orphan")
+    
+    # Establish relationship to jobs. When a recruiter is deleted, delete all their jobs.
+    jobs = relationship("Job", back_populates="user", cascade="all, delete-orphan")
+

@@ -9,11 +9,49 @@ from app.api.analysis import router as analysis_router
 # before calling create_all. This guarantees SQLite tables are generated on start.
 from app.models.user import User
 from app.models.analysis import Analysis
+from app.models.job import Job
+from app.models.screening import CandidateScreening
+from app.utils.resume_storage import (
+    get_screening_pdf_bytes,
+    save_screening_pdf,
+)
 
 # Automatically create the database tables.
 # Base.metadata.create_all looks at all classes that inherit from 'Base' 
 # and creates the corresponding tables if they do not exist.
 Base.metadata.create_all(bind=engine)
+
+
+def backfill_missing_screening_pdfs() -> None:
+    """Restore PDF bytes for screenings created before resume storage was enabled."""
+    from app.core.database import SessionLocal
+
+    db = SessionLocal()
+    try:
+        screenings = (
+            db.query(CandidateScreening)
+            .filter(CandidateScreening.resume_pdf.is_(None))
+            .all()
+        )
+        updated = False
+        for screening in screenings:
+            pdf_bytes = get_screening_pdf_bytes(
+                screening.id,
+                screening.resume_filename,
+                screening.resume_pdf,
+            )
+            if not pdf_bytes:
+                continue
+            screening.resume_pdf = pdf_bytes
+            save_screening_pdf(screening.id, pdf_bytes)
+            updated = True
+        if updated:
+            db.commit()
+    finally:
+        db.close()
+
+
+backfill_missing_screening_pdfs()
 
 # Create the core FastAPI application instance.
 app = FastAPI(
@@ -36,9 +74,13 @@ app.add_middleware(
     allow_headers=["*"],         # Allows any headers (like Authorization, Content-Type)
 )
 
-# Mount our authentication and analysis routers under the /api prefix.
+# Mount our authentication, analysis, and jobs routers under the /api prefix.
+from app.api.job import router as job_router
+
 app.include_router(auth_router, prefix="/api")
 app.include_router(analysis_router, prefix="/api")
+app.include_router(job_router, prefix="/api")
+
 
 @app.get("/")
 def read_root():
