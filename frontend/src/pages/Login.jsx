@@ -30,7 +30,7 @@ const ROLES = [
 ];
 
 export default function Login() {
-  const { login, loginWithGoogleToken, logout } = useAuth();
+  const { login, loginWithGoogleToken, logout, user, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -43,15 +43,21 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Already signed in (e.g. after refresh) — skip role selection and go to portal.
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated || !user) return;
+    navigate(user.role === "recruiter" ? "/recruiter" : "/candidate", { replace: true });
+  }, [authLoading, isAuthenticated, user, navigate]);
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const googleToken = params.get("google_token");
     if (googleToken) {
-      const role = params.get("role");
       setLoading(true);
       loginWithGoogleToken(googleToken)
-        .then((user) => {
-          if (user?.role === "recruiter") {
+        .then((signedInUser) => {
+          if (signedInUser?.role === "recruiter") {
             navigate("/recruiter", { replace: true });
           } else {
             navigate("/candidate", { replace: true });
@@ -120,6 +126,19 @@ export default function Login() {
   };
 
   const roleConfig = ROLES.find((r) => r.key === selectedRole);
+
+  if (authLoading || isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+        <div className="text-center">
+          <Loader2 className="w-10 h-10 animate-spin text-brand mx-auto mb-4" />
+          <p className="text-gray-400 text-sm">
+            {isAuthenticated ? "Taking you to your dashboard..." : "Checking your session..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden">

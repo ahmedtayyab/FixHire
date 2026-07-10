@@ -22,14 +22,38 @@ function writeCachedUser(userData) {
   }
 }
 
+/** Read email/role from JWT without verifying (server still validates on API calls). */
+function userFromToken(token) {
+  try {
+    const payloadPart = token.split(".")[1];
+    if (!payloadPart) return null;
+    const json = atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/"));
+    const payload = JSON.parse(json);
+    if (!payload?.sub || !payload?.role) return null;
+    // Reject clearly expired tokens client-side
+    if (payload.exp && payload.exp * 1000 < Date.now()) return null;
+    return {
+      email: payload.sub,
+      role: payload.role,
+      full_name: payload.full_name || payload.sub.split("@")[0],
+    };
+  } catch {
+    return null;
+  }
+}
+
+function initialUser() {
+  return readCachedUser() || userFromToken(localStorage.getItem(TOKEN_KEY) || "");
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => readCachedUser());
+  const [user, setUser] = useState(() => initialUser());
   // loading is true while we verify the token on application load.
   // This prevents the UI from flickering or redirecting authenticated users to the login screen.
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!localStorage.getItem(TOKEN_KEY));
 
   // Re-hydrate auth state when the app mounts.
-  // Prefer a cached user for instant UI, then revalidate with /auth/me.
+  // Prefer cached / JWT-derived user for instant UI, then revalidate with /auth/me.
   // Retries on network/cold-start failures so a sleeping Render instance does not
   // wipe a still-valid session. Only clear the token on real auth failures (401).
   useEffect(() => {
@@ -42,7 +66,13 @@ export function AuthProvider({ children }) {
         return;
       }
 
-      const maxAttempts = 3;
+      // Keep recruiter/candidate on their portal immediately from JWT/cache.
+      const optimistic = readCachedUser() || userFromToken(token);
+      if (optimistic) {
+        setUser(optimistic);
+      }
+
+      const maxAttempts = 5;
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
           const userData = await api.auth.getMe();
@@ -64,15 +94,20 @@ export function AuthProvider({ children }) {
           if (isNetworkError && attempt < maxAttempts) {
             // Render free tier can take 30–60s to wake; wait and retry.
             console.warn(`Session restore attempt ${attempt} failed (server waking up). Retrying...`);
-            await new Promise((resolve) => setTimeout(resolve, attempt * 2000));
+            await new Promise((resolve) => setTimeout(resolve, Math.min(attempt * 3000, 12000)));
             continue;
           }
 
-          // Keep token + cached user on transient failures so refresh does not force logout.
+          // Keep token + optimistic user so refresh does not force logout.
           console.error("Failed to restore session (token kept):", err);
-          if (!readCachedUser()) {
-            // No cache to fall back on — stay logged out in UI, but keep token for next try.
-            setUser(null);
+          if (!optimistic && !readCachedUser()) {
+            const fallback = userFromToken(token);
+            if (fallback) {
+              setUser(fallback);
+              writeCachedUser(fallback);
+            } else {
+              setUser(null);
+            }
           }
           break;
         }

@@ -15,13 +15,23 @@ import { Loader2 } from "lucide-react";
  */
 function ProtectedRoute({ children, allowedRole }) {
   const { user, isAuthenticated, loading } = useAuth();
+  const hasToken = typeof window !== "undefined" && !!localStorage.getItem("fixhire_token");
 
-  if (loading) {
+  // While restoring a session (or if a token exists but user is still hydrating),
+  // never bounce recruiters/candidates back to the role-selection login screen.
+  if (loading || (hasToken && !isAuthenticated)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-950">
         <div className="text-center">
           <Loader2 className="w-10 h-10 animate-spin text-brand mx-auto mb-4" />
-          <p className="text-gray-400 text-sm">Verifying session...</p>
+          <p className="text-gray-400 text-sm">
+            {hasToken ? "Restoring your session..." : "Verifying session..."}
+          </p>
+          {hasToken && (
+            <p className="text-gray-600 text-xs mt-2">
+              The server may be waking up — this can take up to a minute.
+            </p>
+          )}
         </div>
       </div>
     );
