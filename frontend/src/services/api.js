@@ -26,15 +26,31 @@ async function request(endpoint, options = {}) {
     headers,
   };
   
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
-  
+  let response;
+  try {
+    response = await fetch(`${BASE_URL}${endpoint}`, config);
+  } catch (err) {
+    // Network / CORS / cold-start failures — keep status undefined so callers
+    // can distinguish these from real auth rejections (401).
+    const networkError = new Error(
+      err?.message === "Failed to fetch"
+        ? "Unable to reach the server. It may be waking up — please try again."
+        : err?.message || "Network error"
+    );
+    networkError.status = 0;
+    networkError.isNetworkError = true;
+    throw networkError;
+  }
+
   // Handle HTTP errors cleanly
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     const errorMessage = errorData.detail || "Something went wrong";
-    throw new Error(errorMessage);
+    const apiError = new Error(errorMessage);
+    apiError.status = response.status;
+    throw apiError;
   }
-  
+
   return response.json();
 }
 
