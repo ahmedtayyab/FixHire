@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     # Gemini Model Name (defaulting to the stable gemini-2.5-flash, as gemini-1.5-flash is deprecated/decommissioned)
     GEMINI_MODEL_NAME: str = "gemini-2.5-flash"
 
+    # Google OAuth settings for social sign-in (set via environment variables).
+    GOOGLE_CLIENT_ID: str | None = None
+    GOOGLE_CLIENT_SECRET: str | None = None
+    GOOGLE_OAUTH_REDIRECT_URI: str | None = "http://127.0.0.1:8000/api/auth/google/callback"
+    FRONTEND_URL: str = "http://localhost:5173"
+
     # SettingsConfigDict tells Pydantic to read environment variables from a .env file.
     # We search both the current directory and the parent directory to accommodate different process roots.
     model_config = SettingsConfigDict(

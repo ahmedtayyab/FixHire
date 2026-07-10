@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Sparkles, AlertCircle, Loader2, Briefcase, User, ArrowLeft } from "lucide-react";
 
@@ -29,8 +29,9 @@ const ROLES = [
 ];
 
 export default function Login() {
-  const { login, logout } = useAuth();
+  const { login, loginWithGoogleToken, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Step 1: role selection, Step 2: credentials form
   const [step, setStep] = useState(1);
@@ -40,6 +41,31 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const googleToken = params.get("google_token");
+    if (googleToken) {
+      const role = params.get("role");
+      setLoading(true);
+      loginWithGoogleToken(googleToken)
+        .then((user) => {
+          if (user?.role === "recruiter") {
+            navigate("/recruiter", { replace: true });
+          } else {
+            navigate("/candidate", { replace: true });
+          }
+        })
+        .catch((err) => {
+          console.error("Google login failed:", err);
+          setError(err.message || "Google login failed. Please try again.");
+        })
+        .finally(() => {
+          setLoading(false);
+          window.history.replaceState({}, document.title, location.pathname);
+        });
+    }
+  }, [location.search, loginWithGoogleToken, navigate, location.pathname]);
 
   const handleRoleSelect = (roleKey) => {
     setSelectedRole(roleKey);
@@ -51,6 +77,14 @@ export default function Login() {
     setStep(1);
     setSelectedRole(null);
     setError("");
+  };
+
+  const handleGoogleLogin = () => {
+    if (!selectedRole) {
+      setError("Please select Candidate or Recruiter before signing in with Google.");
+      return;
+    }
+    window.location.href = `http://127.0.0.1:8000/api/auth/google/login?role=${selectedRole}`;
   };
 
   const handleSubmit = async (e) => {
@@ -241,6 +275,16 @@ export default function Login() {
                 )}
               </button>
             </form>
+
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              className="mt-4 w-full py-3 rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-3"
+            >
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
+              <span>Sign in with Google</span>
+            </button>
 
             <div className="mt-8 pt-6 border-t border-white/5 text-center text-sm text-gray-400">
               Don't have an account?{" "}

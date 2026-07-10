@@ -106,7 +106,7 @@ export default function CandidateDashboard() {
       "Extracting text content...",
       "Analyzing against job requirements...",
       "Running ATS algorithms...",
-      "Consulting Google Gemini AI...",
+      "Running AI comparison against the role...",
       "Generating cover letter & interview prep..."
     ];
     
@@ -127,7 +127,7 @@ export default function CandidateDashboard() {
       setJobTitle("");
       setJobDescription("");
     } catch (err) {
-      setError(err.message || "Failed to complete AI resume analysis.");
+      setError(err.message || "Failed to complete resume analysis.");
     } finally {
       clearInterval(stageInterval);
       setLoading(false);
@@ -230,7 +230,7 @@ export default function CandidateDashboard() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Analyzing Resume</h3>
               <p className="text-gray-400 max-w-md text-sm mb-4">
-                Our Gemini AI engine is processing your PDF and running calculations against the target job.
+                Our AI matching engine is processing your PDF and running calculations against the target job.
               </p>
               <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/5 text-xs text-brand-light font-mono animate-pulse">
                 {loadingStage}
@@ -313,6 +313,45 @@ export default function CandidateDashboard() {
                      selectedAnalysis.compatibility_score >= 50 ? 'Needs Improvement' :
                      'Low Matching Match'}
                   </span>
+                </div>
+
+                {/* Score Explanation Card */}
+                <div className="glass-card p-6 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-white flex items-center">
+                        <Sparkles className="w-4 h-4 text-brand mr-2" />
+                        Why this score?
+                      </h3>
+                      <span className="text-xs uppercase tracking-wider text-gray-500">Insights</span>
+                    </div>
+                    <p className="text-sm text-gray-400 leading-relaxed mb-5">
+                      Your score is based on how closely your resume content aligns with the job, which keywords are missing, and how strong the experience descriptions are.
+                    </p>
+                    <div className="grid gap-3">
+                      <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
+                        <div className="flex items-center justify-between text-sm text-gray-300">
+                          <span>Missing keywords</span>
+                          <span className="font-semibold text-white">{selectedAnalysis.analysis_results?.missing_skills?.length ?? 0}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">More missing keywords can reduce your match score.</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
+                        <div className="flex items-center justify-between text-sm text-gray-300">
+                          <span>Improvement suggestions</span>
+                          <span className="font-semibold text-white">{selectedAnalysis.analysis_results?.improvement_suggestions?.length ?? 0}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">These tips show where resume phrasing can be stronger.</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
+                        <div className="flex items-center justify-between text-sm text-gray-300">
+                          <span>Resume relevance</span>
+                          <span className="font-semibold text-white">{selectedAnalysis.compatibility_score >= 80 ? 'High' : selectedAnalysis.compatibility_score >= 50 ? 'Medium' : 'Low'}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">This reflects how well your profile fits the job requirements.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Recruiter Summary Card */}
@@ -520,7 +559,7 @@ export default function CandidateDashboard() {
                   Resume Optimizer
                 </h1>
                 <p className="text-gray-400 mt-2 text-sm leading-relaxed">
-                  Paste your target job specs, drag in your resume, and let our Google Gemini algorithm run a tailored matching check.
+                  Paste your target job specs, drag in your resume, and let our AI matching engine run a tailored comparison check.
                 </p>
               </div>
 

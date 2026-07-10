@@ -14,6 +14,10 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleGoogleSignup = () => {
+    window.location.href = `http://127.0.0.1:8000/api/auth/google/login?role=${role}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -53,7 +57,7 @@ export default function Register() {
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-white">Get Started</h2>
           <p className="text-gray-400 mt-2 text-sm font-light">
-            Create an account to unlock candidate AI tools or recruiter dashboards.
+            Create an account to unlock candidate tools or recruiter dashboards.
           </p>
         </div>
 
@@ -140,6 +144,23 @@ export default function Register() {
                   <span className="text-xs text-gray-500 mt-1">Evaluate resumes</span>
                 </button>
               </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignup}
+              disabled={loading}
+              className="w-full py-3 flex items-center justify-center space-x-3 rounded-2xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors"
+            >
+              <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 text-[10px] font-semibold">
+                G
+              </span>
+              <span>Sign up with Google</span>
+            </button>
+
+            <div className="relative my-6 text-center text-sm text-gray-400">
+              <span className="bg-slate-950 px-3">or</span>
+              <div className="absolute inset-x-0 top-1/2 border-t border-white/10" />
             </div>
 
             <button

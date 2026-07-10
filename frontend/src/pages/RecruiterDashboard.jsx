@@ -527,7 +527,7 @@ export default function RecruiterDashboard() {
                         <div className="py-1">
                           <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto mb-2" />
                           <h4 className="text-xs font-semibold text-white">Analyzing Candidates...</h4>
-                          <p className="text-[9px] text-gray-400 mt-0.5">Extracting resume details with Gemini AI.</p>
+                          <p className="text-[9px] text-gray-400 mt-0.5">Extracting resume details with AI.</p>
                         </div>
                       ) : (
                         <>
@@ -603,7 +603,7 @@ export default function RecruiterDashboard() {
                       <AlertTriangle className="w-8 h-8 text-gray-700 mx-auto mb-3" />
                       <h4 className="text-sm font-semibold text-gray-400">No Screened Candidates Yet</h4>
                       <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
-                        Upload some applicant PDF resumes above to evaluate them side-by-side using Gemini AI.
+                        Upload some applicant PDF resumes above to evaluate them side-by-side with AI insights.
                       </p>
                     </div>
                   ) : filteredScreenings.length === 0 ? (
@@ -995,7 +995,7 @@ export default function RecruiterDashboard() {
                 <textarea
                   required
                   rows="4"
-                  placeholder="Provide a comprehensive job description. Gemini AI uses this detailed description to match against candidate resumes..."
+                  placeholder="Provide a comprehensive job description. This detailed description helps AI match against candidate resumes..."
                   value={newJob.description}
                   onChange={e => setNewJob(prev => ({ ...prev, description: e.target.value }))}
                   className="form-input text-sm resize-none font-sans"
@@ -1076,7 +1076,7 @@ export default function RecruiterDashboard() {
           <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-            <span>FastAPI Backend & Gemini AI Systems Online</span>
+            <span>FastAPI Backend & AI Matching Systems Online</span>
           </div>
         </div>
       </footer>

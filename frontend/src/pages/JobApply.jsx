@@ -284,7 +284,7 @@ export default function JobApply() {
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xs font-bold shrink-0 mt-0.5">1</div>
                     <p className="text-xs text-gray-400 leading-relaxed">
-                      Our Gemini-powered resume scanning agent has logged your credentials and analyzed your experience against the job profile.
+                      Our AI resume screening process has logged your credentials and analyzed your experience against the job profile.
                     </p>
                   </div>
                   <div className="flex gap-3">
@@ -357,8 +357,8 @@ export default function JobApply() {
 
               {/* Security notice */}
               <div className="p-4 rounded-xl bg-white/2 border border-white/5 text-[11px] text-gray-500 leading-relaxed">
-                <span className="font-bold text-gray-400 block mb-1">Security & AI Privacy Note</span>
-                Your uploaded resume document is scanned locally and screened on-demand by private Google Gemini LLM API clusters. We do not sell applicant details or distribute your personal documents to unauthorized training sets.
+                <span className="font-bold text-gray-400 block mb-1">Security & Privacy Note</span>
+                Your uploaded resume document is scanned locally and screened on-demand through our secure matching process. We do not sell applicant details or distribute your personal documents to unauthorized training sets.
               </div>
             </div>
 
@@ -369,7 +369,7 @@ export default function JobApply() {
                   <Sparkles className="w-4.5 h-4.5 text-accent animate-pulse" /> Apply for this position
                 </h2>
                 <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-                  Submit your details and PDF resume. Gemini AI will cross-reference your skills and experience to highlight matches instantly.
+                  Submit your details and PDF resume. Our matching system will cross-reference your skills and experience to highlight matches instantly.
                 </p>
 
                 {error && (
@@ -468,7 +468,7 @@ export default function JobApply() {
                         <Loader2 className="w-4 h-4 animate-spin text-white" /> 
                         {submitStep === 1 && "Uploading resume file..."}
                         {submitStep === 2 && "Extracting text modules..."}
-                        {submitStep === 3 && "Analyzing matching parameters with Gemini AI..."}
+                        {submitStep === 3 && "Analyzing matching parameters with AI..."}
                       </>
                     ) : (
                       <>
@@ -490,7 +490,7 @@ export default function JobApply() {
           <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-            <span>Gemini AI Engine Online</span>
+            <span>AI Matching Engine Online</span>
           </div>
         </div>
       </footer>

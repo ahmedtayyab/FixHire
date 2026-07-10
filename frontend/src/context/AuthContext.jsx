@@ -48,6 +48,18 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const loginWithGoogleToken = async (token) => {
+    setLoading(true);
+    try {
+      localStorage.setItem("fixhire_token", token);
+      const userData = await api.auth.getMe();
+      setUser(userData);
+      return userData;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const register = async (fullName, email, password, role) => {
     setLoading(true);
     try {
@@ -71,6 +83,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: !!user,
         loading,
         login,
+        loginWithGoogleToken,
         register,
         logout,
       }}

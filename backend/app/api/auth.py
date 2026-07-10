@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import json
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
+from starlette.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from authlib.integrations.starlette_client import OAuth
 from app.core.database import get_db
 from app.core.security import get_password_hash, verify_password, create_access_token, decode_access_token
+from app.core.config import settings
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserResponse, Token
 
@@ -11,6 +15,25 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 # OAuth2PasswordBearer is a security dependency. It looks for an Authorization header
 # containing a Bearer token. If the header is missing, it will automatically throw an HTTP 401 error.
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+
+oauth = OAuth()
+if settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET:
+    oauth.register(
+        name="google",
+        client_id=settings.GOOGLE_CLIENT_ID,
+        client_secret=settings.GOOGLE_CLIENT_SECRET,
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email profile"},
+    )
+
+
+def get_google_oauth_client():
+    if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Google OAuth is not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
+        )
+    return oauth.google
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     """
@@ -86,7 +109,7 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
         )
         
     # 2. Verify that the password matches the stored hash.
-    if not verify_password(credentials.password, user.hashed_password):
+    if not user.hashed_password or not verify_password(credentials.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
@@ -104,6 +127,72 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
         "full_name": user.full_name,
         "email": user.email
     }
+
+
+@router.get("/google/login")
+async def google_login(request: Request, role: str = "candidate"):
+    """
+    Redirects the user to Google's OAuth consent screen.
+    """
+    if role not in ["candidate", "recruiter"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid role specified for Google login.",
+        )
+
+    google = get_google_oauth_client()
+    redirect_uri = settings.GOOGLE_OAUTH_REDIRECT_URI
+    return await google.authorize_redirect(request, redirect_uri, state=json.dumps({"role": role}))
+
+
+@router.get("/google/callback")
+async def google_callback(request: Request, db: Session = Depends(get_db)):
+    """
+    Handles the Google OAuth callback and issues a JWT token.
+    """
+    google = get_google_oauth_client()
+    token = await google.authorize_access_token(request)
+    # authlib >= 1.x: userinfo is populated automatically via parse_id_token during
+    # authorize_access_token when the openid scope is present. Fall back to
+    # userinfo endpoint for robustness.
+    user_info = token.get("userinfo")
+    if not user_info:
+        user_info = await google.userinfo(token=token)
+
+    email = user_info.get("email")
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Google account did not return an email address.",
+        )
+
+    full_name = user_info.get("name") or email.split("@")[0]
+    role = "candidate"
+    state_value = request.query_params.get("state")
+    if state_value:
+        try:
+            state_payload = json.loads(state_value)
+            role = state_payload.get("role", "candidate")
+        except json.JSONDecodeError:
+            pass
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        user = User(
+            email=email,
+            hashed_password="",
+            full_name=full_name,
+            role=role,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        role = user.role
+
+    access_token = create_access_token(data={"sub": user.email, "role": user.role})
+    redirect_url = f"{settings.FRONTEND_URL.rstrip('/')}/login?google_token={access_token}&role={role}"
+    return RedirectResponse(redirect_url)
 
 
 @router.get("/me", response_model=UserResponse)

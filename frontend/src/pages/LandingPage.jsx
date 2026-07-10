@@ -43,7 +43,7 @@ export default function LandingPage() {
         <section className="relative pt-20 pb-24 md:pt-32 md:pb-36 max-w-7xl mx-auto px-6 text-center">
           <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-brand-glow border border-brand/20 text-brand-light text-xs font-semibold uppercase tracking-wider mb-8 animate-pulse-slow">
             <Zap className="w-3.5 h-3.5" />
-            <span>Next-Gen Recruitment Powered by Gemini</span>
+            <span>Next-Gen Recruitment with AI Matching</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-8">
@@ -57,7 +57,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-12 font-light leading-relaxed">
-            FixHire is the dual-sided AI platform helping applicants build standard ATS-compliant CVs, and empowering recruiters to rank and filter candidates in minutes.
+            FixHire is the dual-sided hiring platform helping applicants build standard ATS-compliant CVs and empowering recruiters to rank and filter candidates in minutes with AI-assisted insights.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -78,7 +78,7 @@ export default function LandingPage() {
                 <div className="w-16 h-16 rounded-full bg-brand-glow border border-brand/20 flex items-center justify-center mx-auto mb-6">
                   <Sparkles className="w-8 h-8 text-brand" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">AI Platform Preview</h3>
+                <h3 className="text-2xl font-bold mb-2">AI Matching Preview</h3>
                 <p className="text-gray-400 max-w-md mx-auto text-sm">
                   Register or sign in to experience real-time resume parsing, automated ATS scoring, and recruiter ranking dashboards.
                 </p>
@@ -136,7 +136,7 @@ export default function LandingPage() {
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-white">For Recruiters</h3>
                   <p className="text-gray-400 mb-6 font-light leading-relaxed">
-                    Skip manually scanning hundreds of resumes. Create job postings, upload applications in bulk, get precise candidate rankings based on compatibility, and view AI-driven side-by-side matches.
+                    Skip manually scanning hundreds of resumes. Create job postings, upload applications in bulk, get precise candidate rankings based on compatibility, and view AI-assisted side-by-side matches.
                   </p>
                   <ul className="space-y-3 mb-8 text-sm text-gray-300">
                     <li className="flex items-center space-x-2">
@@ -174,7 +174,7 @@ export default function LandingPage() {
             </div>
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-extrabold text-accent mb-2">&lt;3s</div>
-              <div className="text-gray-400 text-sm">AI Response Latency</div>
+              <div className="text-gray-400 text-sm">AI Response Speed</div>
             </div>
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">100%</div>

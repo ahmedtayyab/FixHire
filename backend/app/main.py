@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.auth import router as auth_router
@@ -62,10 +63,13 @@ app = FastAPI(
 
 # CORS (Cross-Origin Resource Sharing) middleware configuration.
 origins = [
-    "http://localhost:5173",  # React local development server
-    "http://127.0.0.1:5173"
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:5175",
+    "http://127.0.0.1:5175",
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -73,6 +77,10 @@ app.add_middleware(
     allow_methods=["*"],         # Allows GET, POST, PUT, DELETE, etc.
     allow_headers=["*"],         # Allows any headers (like Authorization, Content-Type)
 )
+# SessionMiddleware is REQUIRED by authlib's starlette OAuth client to store
+# the OAuth state/nonce between the initial redirect and the callback.
+# Without it, every Google OAuth flow will fail with a state mismatch error.
+app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET_KEY)
 
 # Mount our authentication, analysis, and jobs routers under the /api prefix.
 from app.api.job import router as job_router
