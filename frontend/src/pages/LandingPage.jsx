@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, FileText, BarChart2, ShieldCheck, Briefcase, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, BarChart2, ShieldCheck, Briefcase, Zap, Github, Linkedin } from "lucide-react";
+import { GITHUB_URL, LINKEDIN_URL } from "../config.js";
 
 export default function LandingPage() {
   return (
@@ -186,12 +187,39 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-8 bg-dark-950">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-gray-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+        <div className="max-w-7xl mx-auto px-6 flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between text-gray-500 text-sm">
+            <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
+            <div className="flex items-center gap-2 mt-4 md:mt-0 text-gray-400">
+              <span>Built by</span>
+              <span className="text-gray-300 font-medium">Ahmad Tayyab</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 border-t border-white/5">
+            <p className="text-xs text-gray-500 uppercase tracking-wider">Connect with me</p>
+            <div className="flex items-center gap-3">
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:border-brand/30 hover:bg-brand/10 transition-all text-sm font-medium"
+                aria-label="GitHub profile"
+              >
+                <Github className="w-4 h-4" />
+                <span>GitHub</span>
+              </a>
+              <a
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:border-accent/30 hover:bg-accent/10 transition-all text-sm font-medium"
+                aria-label="LinkedIn profile"
+              >
+                <Linkedin className="w-4 h-4" />
+                <span>LinkedIn</span>
+              </a>
+            </div>
           </div>
         </div>
       </footer>
