@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     # Gemini Model Name (defaulting to the stable gemini-2.5-flash, as gemini-1.5-flash is deprecated/decommissioned)
     GEMINI_MODEL_NAME: str = "gemini-2.5-flash"
 
+    # Bulk screening: run multiple Gemini calls in parallel (keep <=5 on free API tiers).
+    SCREENING_CONCURRENCY: int = 4
+    # Truncate resume text sent to Gemini to reduce latency; full text is still stored in DB.
+    SCREENING_MAX_RESUME_CHARS: int = 10000
+
     # Google OAuth settings for social sign-in (set via environment variables).
     GOOGLE_CLIENT_ID: str | None = None
     GOOGLE_CLIENT_SECRET: str | None = None

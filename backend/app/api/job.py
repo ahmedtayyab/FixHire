@@ -1,5 +1,6 @@
 import io
 import json
+from concurrent.futures import ThreadPoolExecutor
 from typing import List
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query
@@ -171,6 +172,77 @@ def generate_mock_screening(candidate_name: str, job_title: str) -> dict:
         "experience_matches": matches,
         "interview_questions": questions,
         "decision_recommendation": recommendation
+    }
+
+
+def build_screening_prompt(
+    job_title: str,
+    job_description: str,
+    job_requirements: str | None,
+    resume_text: str,
+) -> str:
+    prompt_resume = resume_text[: settings.SCREENING_MAX_RESUME_CHARS]
+    return f"""
+You are an expert recruitment and HR advisor.
+Screen the candidate's resume against the following job profile and generate a comprehensive screening evaluation matrix.
+
+JOB TITLE:
+{job_title}
+
+JOB DESCRIPTION:
+{job_description}
+
+JOB REQUIREMENTS:
+{job_requirements or "None specified"}
+
+CANDIDATE RESUME TEXT:
+{prompt_resume}
+
+Strictly generate output fitting the specified JSON schema.
+"""
+
+
+def run_gemini_screening(model, prompt: str) -> dict:
+    response = model.generate_content(
+        prompt,
+        generation_config=genai.GenerationConfig(
+            response_mime_type="application/json",
+            response_schema=GeminiScreeningResult,
+        ),
+    )
+    return json.loads(response.text)
+
+
+def process_single_resume_screening(
+    prepared: dict,
+    job_title: str,
+    job_description: str,
+    job_requirements: str | None,
+    has_api_key: bool,
+    model,
+) -> dict:
+    filename = prepared["filename"]
+    resume_text = prepared["resume_text"]
+    candidate_name = extract_candidate_name(resume_text, filename)
+
+    if has_api_key:
+        prompt = build_screening_prompt(
+            job_title, job_description, job_requirements, resume_text
+        )
+        try:
+            result_json = run_gemini_screening(model, prompt)
+            compatibility_score = result_json.get("compatibility_score", 50)
+        except Exception as e:
+            raise RuntimeError(f"AI screening failed for {filename}: {str(e)}") from e
+    else:
+        result_json = generate_mock_screening(candidate_name, job_title)
+        compatibility_score = result_json["compatibility_score"]
+
+    return {
+        **prepared,
+        "candidate_name": candidate_name,
+        "result_json": result_json,
+        "compatibility_score": compatibility_score,
     }
 
 # Endpoint: Create Job Posting
@@ -396,7 +468,7 @@ def screen_resumes(
         )
 
     has_api_key = bool(settings.GEMINI_API_KEY and settings.GEMINI_API_KEY.strip())
-    screenings_created = []
+    prepared_files = []
 
     for file in files:
         if not file.filename.lower().endswith(".pdf"):
@@ -404,9 +476,9 @@ def screen_resumes(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"File {file.filename} is not a PDF. Only PDF files are supported."
             )
-        
+
+        file_content = file.file.read()
         try:
-            file_content = file.file.read()
             resume_text = extract_text_from_pdf(file_content)
         except Exception as e:
             if not has_api_key:
@@ -416,71 +488,62 @@ def screen_resumes(
         finally:
             file.file.close()
 
-        candidate_name = extract_candidate_name(resume_text, file.filename)
+        prepared_files.append(
+            {
+                "filename": file.filename,
+                "file_content": file_content,
+                "resume_text": resume_text,
+            }
+        )
 
-        if has_api_key:
-            try:
-                genai.configure(api_key=settings.GEMINI_API_KEY)
-                model = genai.GenerativeModel(settings.GEMINI_MODEL_NAME)
-                
-                prompt = f"""
-You are an expert recruitment and HR advisor.
-Screen the candidate's resume against the following job profile and generate a comprehensive screening evaluation matrix.
+    model = None
+    if has_api_key:
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        model = genai.GenerativeModel(settings.GEMINI_MODEL_NAME)
 
-JOB TITLE:
-{job.title}
+    def screen_one(prepared: dict) -> dict:
+        return process_single_resume_screening(
+            prepared,
+            job.title,
+            job.description,
+            job.requirements,
+            has_api_key,
+            model,
+        )
 
-JOB DESCRIPTION:
-{job.description}
-
-JOB REQUIREMENTS:
-{job.requirements or "None specified"}
-
-CANDIDATE RESUME TEXT:
-{resume_text}
-
-Strictly generate output fitting the specified JSON schema.
-"""
-                response = model.generate_content(
-                    prompt,
-                    generation_config=genai.GenerationConfig(
-                        response_mime_type="application/json",
-                        response_schema=GeminiScreeningResult
-                    )
-                )
-                
-                result_json = json.loads(response.text)
-                compatibility_score = result_json.get("compatibility_score", 50)
-                
-            except Exception as e:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail=f"AI screening failed for {file.filename}: {str(e)}"
-                )
+    try:
+        if has_api_key and len(prepared_files) > 1:
+            with ThreadPoolExecutor(max_workers=settings.SCREENING_CONCURRENCY) as executor:
+                processed = list(executor.map(screen_one, prepared_files))
         else:
-            result_json = generate_mock_screening(candidate_name, job.title)
-            compatibility_score = result_json["compatibility_score"]
+            processed = [screen_one(prepared) for prepared in prepared_files]
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
+        ) from e
 
-        # Create screening record and persist the original PDF
+    screenings_created = []
+    for item in processed:
         new_screening = CandidateScreening(
             job_id=job.id,
-            candidate_name=candidate_name,
-            resume_filename=file.filename,
-            resume_text=resume_text,
-            resume_pdf=file_content,
-            compatibility_score=compatibility_score,
-            analysis_results=result_json
+            candidate_name=item["candidate_name"],
+            resume_filename=item["filename"],
+            resume_text=item["resume_text"],
+            resume_pdf=item["file_content"],
+            compatibility_score=item["compatibility_score"],
+            analysis_results=item["result_json"],
         )
         db.add(new_screening)
         db.flush()
-        save_screening_pdf(new_screening.id, file_content)
+        save_screening_pdf(new_screening.id, item["file_content"])
         screenings_created.append(new_screening)
 
     db.commit()
-    
+
     for scr in screenings_created:
         db.refresh(scr)
-        
+
     return screenings_created
 
 # Endpoint: Public Candidate Application Submission (No auth required)
