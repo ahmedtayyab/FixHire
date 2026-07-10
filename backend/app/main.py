@@ -70,6 +70,9 @@ origins = [
     "http://localhost:5175",
     "http://127.0.0.1:5175",
 ]
+frontend_origin = settings.FRONTEND_URL.rstrip("/")
+if frontend_origin and frontend_origin not in origins:
+    origins.append(frontend_origin)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

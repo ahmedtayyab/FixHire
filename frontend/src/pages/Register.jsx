@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config.js";
 import { Sparkles, AlertCircle, Loader2, User, Briefcase } from "lucide-react";
 
 export default function Register() {
@@ -15,7 +16,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignup = () => {
-    window.location.href = `http://127.0.0.1:8000/api/auth/google/login?role=${role}`;
+    window.location.href = `${API_BASE_URL}/auth/google/login?role=${role}`;
   };
 
   const handleSubmit = async (e) => {

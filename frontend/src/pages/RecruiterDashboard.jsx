@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
+import { API_BASE_URL } from "../config.js";
 import { 
   LogOut, 
   User, 
@@ -642,7 +643,7 @@ export default function RecruiterDashboard() {
                                     {scr.candidate_name}
                                   </span>
                                   <a
-                                    href={`http://localhost:8000/api/jobs/screenings/${scr.id}/pdf?token=${localStorage.getItem("fixhire_token")}`}
+                                    href={`${API_BASE_URL}/jobs/screenings/${scr.id}/pdf?token=${localStorage.getItem("fixhire_token")}`}
                                     target="_blank"
                                     rel="noreferrer"
                                     onClick={(e) => e.stopPropagation()}
@@ -710,7 +711,7 @@ export default function RecruiterDashboard() {
                             </button>
                             <span className="text-[10px] text-gray-700">|</span>
                             <a
-                              href={`http://localhost:8000/api/jobs/screenings/${selectedCandidate.id}/pdf?token=${localStorage.getItem("fixhire_token")}`}
+                              href={`${API_BASE_URL}/jobs/screenings/${selectedCandidate.id}/pdf?token=${localStorage.getItem("fixhire_token")}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-[10px] text-accent hover:text-accent-light flex items-center gap-1 font-semibold underline"

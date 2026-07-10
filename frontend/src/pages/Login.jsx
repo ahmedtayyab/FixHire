@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config.js";
 import { Sparkles, AlertCircle, Loader2, Briefcase, User, ArrowLeft } from "lucide-react";
 
 const ROLES = [
@@ -84,7 +85,7 @@ export default function Login() {
       setError("Please select Candidate or Recruiter before signing in with Google.");
       return;
     }
-    window.location.href = `http://127.0.0.1:8000/api/auth/google/login?role=${selectedRole}`;
+    window.location.href = `${API_BASE_URL}/auth/google/login?role=${selectedRole}`;
   };
 
   const handleSubmit = async (e) => {

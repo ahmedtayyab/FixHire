@@ -1,7 +1,9 @@
 // API Service to centralize all network requests to our FastAPI backend.
 // This prevents duplicating headers and fetch configurations across our page components.
 
-const BASE_URL = "http://localhost:8000/api";
+import { API_BASE_URL } from "../config.js";
+
+const BASE_URL = API_BASE_URL;
 
 /**
  * Core request helper that automatically injects the JWT token

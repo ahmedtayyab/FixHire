@@ -2,15 +2,23 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.core.config import settings
 
+def _normalize_database_url(url: str) -> str:
+    # Some hosts (Neon, Heroku) provide postgres://; SQLAlchemy expects postgresql://.
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql://", 1)
+    return url
+
+DATABASE_URL = _normalize_database_url(settings.DATABASE_URL)
+
 # Determine if we are using SQLite. 
 # SQLite requires 'check_same_thread: False' to allow multi-threaded requests in FastAPI.
-IS_SQLITE = settings.DATABASE_URL.startswith("sqlite")
+IS_SQLITE = DATABASE_URL.startswith("sqlite")
 
 connect_args = {"check_same_thread": False} if IS_SQLITE else {}
 
 # Engine represents the core interface to the database. It manages the connection pool.
 engine = create_engine(
-    settings.DATABASE_URL, 
+    DATABASE_URL, 
     connect_args=connect_args
 )
 
