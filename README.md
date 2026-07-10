@@ -2,13 +2,28 @@
 
 FixHire is a modern SaaS recruitment application designed to assist both candidates and recruiters using artificial intelligence. This repository hosts a FastAPI backend and a React (Vite) frontend.
 
+**Repository:** [github.com/ahmedtayyab/FixHire](https://github.com/ahmedtayyab/FixHire)
+
+---
+
+## Live Deployment
+
+| Service | URL | Platform |
+|---------|-----|----------|
+| **Frontend (App)** | [https://fix-hire.vercel.app](https://fix-hire.vercel.app) | [Vercel](https://vercel.com) |
+| **Backend (API)** | [https://fixhire.onrender.com](https://fixhire.onrender.com) | [Render](https://render.com) |
+| **API Docs** | [https://fixhire.onrender.com/docs](https://fixhire.onrender.com/docs) | Swagger UI |
+| **Database** | PostgreSQL on [Neon](https://neon.tech) | Managed cloud DB |
+
+> **Note:** The Render free tier sleeps after ~15 minutes of inactivity. The first API request after idle may take 30–60 seconds to wake up.
+
 ---
 
 ## What's Been Done So Far
 
 ### Phase 1: Infrastructure & Authentication (Completed)
 - **Project Scaffolding**: Setup the workspace folder structure separating the FastAPI backend and React frontend.
-- **Database & Models**: Configured SQLAlchemy database connectivity using SQLite (`fixhire.db`). Created initial schemas for users and resume scan sessions.
+- **Database & Models**: Configured SQLAlchemy database connectivity using SQLite (`fixhire.db`) locally and PostgreSQL in production. Created initial schemas for users and resume scan sessions.
 - **User Authentication**:
   - Implemented JWT token-based authentication on the backend (`app/api/auth.py`).
   - Added password hashing utilizing bcrypt.
@@ -18,7 +33,7 @@ FixHire is a modern SaaS recruitment application designed to assist both candida
 
 ### Phase 2: Candidate Dashboard & Gemini AI Integration (Completed)
 - **Resume Text Extraction**: Integrated PyPDF to extract text from candidate PDF uploads on the fly.
-- **Structured Gemini Analysis**: 
+- **Structured Gemini Analysis**:
   - Integrated the Google Gemini SDK with the FastAPI backend.
   - Set up structured JSON prompts requesting specific analysis objects from Gemini.
   - Implemented a fallback mock configuration so the backend can run in offline/test mode when no Gemini API key is configured.
@@ -60,15 +75,69 @@ FixHire is a modern SaaS recruitment application designed to assist both candida
   - Two-step login flow: select Candidate or Recruiter role first, then enter credentials.
   - Role mismatch validation prevents signing in with the wrong portal selected.
 
+### Phase 4: Google OAuth Sign-In (Completed)
+- **Backend OAuth Flow**:
+  - Integrated `authlib` with Google OpenID Connect for social sign-in.
+  - Added `/api/auth/google/login` and `/api/auth/google/callback` endpoints.
+  - Session middleware for OAuth state/nonce validation between redirect and callback.
+  - Auto-creates user accounts on first Google sign-in; existing users log in by email match.
+- **Frontend Integration**:
+  - "Sign in with Google" and "Sign up with Google" buttons on Login and Register pages.
+  - Role selection (Candidate / Recruiter) before initiating Google OAuth.
+  - Token handoff via redirect to `/login?google_token=...` and session hydration in `AuthContext`.
+- **Security**:
+  - OAuth credentials loaded from environment variables only (not committed to git).
+  - GitHub push protection enforced for secrets in source code.
+
+### Phase 5: Production Deployment (Completed)
+- **Frontend on Vercel**:
+  - Auto-deploys from `main` branch on every push.
+  - Root directory: `frontend/`, build output: `dist/`.
+  - Environment-based API URL via `VITE_API_URL`.
+  - SPA routing configured in `vercel.json`.
+- **Backend on Render**:
+  - Auto-deploys from `main` branch on every push.
+  - Root directory: `backend/`, start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+  - Blueprint defined in `render.yaml`.
+  - Production CORS allows the Vercel frontend via `FRONTEND_URL` env var.
+- **Database on Neon**:
+  - PostgreSQL connection via `DATABASE_URL` on Render.
+  - `psycopg2-binary` driver with `postgres://` → `postgresql://` URL normalization.
+- **Deployment Prep Code**:
+  - `frontend/src/config.js` centralizes API origin for all frontend requests.
+  - `.env.example` documents all local and production environment variables.
+
 ### Recent Refinements & Fixes
-- **Gemini Model Upgrade**: Switched the default model to `gemini-2.5-flash` in the backend settings (as `gemini-1.5-flash` is now decommissioned).
-- **Flexible Environment Loading**: Updated settings initialization to load `.env` from either the backend root or the parent directory (`[".env", "../.env"]`). This prevents configuration loading issues regardless of whether the server is started from `/backend` or the workspace root.
-- **Cover Letter Formatting**: Refined the prompts sent to Gemini to enforce double newlines (`\n\n`) between the salutation, paragraphs, and closing signature to ensure the cover letter formats as a professional, readable document.
-- **Screening PDF Backfill**: Fixed "Open CV" for screenings created before PDF storage was enabled by backfilling from disk and matching source filenames on startup.
+- **Gemini Model Upgrade**: Switched the default model to `gemini-2.5-flash` (as `gemini-1.5-flash` is decommissioned).
+- **Flexible Environment Loading**: Settings load `.env` from backend root or parent directory.
+- **Cover Letter Formatting**: Prompts enforce double newlines between salutation, paragraphs, and closing.
+- **Screening PDF Backfill**: Restores PDFs for legacy screenings on startup.
+- **Render Deploy Fix**: Added `httpx` dependency required by `authlib` OAuth client.
+- **Backup Branch**: Pre-deployment snapshot preserved at `backup/phase3-complete` and tag `phase3-complete-backup`.
 
 ---
 
-## API Endpoints (Phase 3)
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/auth/register` | Public | Register a new user |
+| `POST` | `/api/auth/login` | Public | Login and receive JWT |
+| `GET` | `/api/auth/me` | User | Get current user profile |
+| `GET` | `/api/auth/google/login` | Public | Redirect to Google OAuth consent |
+| `GET` | `/api/auth/google/callback` | Public | Google OAuth callback, issues JWT |
+
+### Candidate Analysis
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/analysis/analyze` | Candidate | Analyze resume against job description |
+| `GET` | `/api/analysis/history` | Candidate | List past resume scans |
+| `DELETE` | `/api/analysis/{id}` | Candidate | Delete a past scan |
+
+### Jobs & Screening
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
@@ -86,46 +155,147 @@ FixHire is a modern SaaS recruitment application designed to assist both candida
 
 ## Tech Stack
 
-- **Frontend**: React (Vite), Tailwind CSS (Dark Mode & Glassmorphism design)
-- **Backend**: FastAPI (Python), SQLAlchemy (ORM)
-- **AI Engine**: Google Gemini API via official `google-generativeai` SDK
-- **Database**: SQLite (Local Dev) / PostgreSQL (Production ready)
-- **Authentication**: JWT (JSON Web Tokens) with bcrypt password hashing
-- **PDF Processing**: PyPDF
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React 19, Vite, Tailwind CSS, React Router |
+| **Backend** | FastAPI, Uvicorn, SQLAlchemy |
+| **AI Engine** | Google Gemini API (`gemini-2.5-flash`) |
+| **Database** | SQLite (local) / PostgreSQL (production via Neon) |
+| **Authentication** | JWT + bcrypt, Google OAuth (authlib) |
+| **PDF Processing** | PyPDF |
+| **Hosting** | Vercel (frontend), Render (backend), Neon (database) |
 
 ---
 
-## Setup & Running Guide
+## Local Development Setup
 
 ### 1. Environment Configuration
-Create a `.env` file in the root workspace folder with the following variables:
+
+Copy `.env.example` to `.env` in the project root:
+
 ```env
 DATABASE_URL=sqlite:///./fixhire.db
 JWT_SECRET_KEY=your_super_secret_jwt_key
 GEMINI_API_KEY=your_google_gemini_api_key
 GEMINI_MODEL_NAME=gemini-2.5-flash
+
+# Optional: Google OAuth (for local social sign-in)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_OAUTH_REDIRECT_URI=http://127.0.0.1:8000/api/auth/google/callback
+FRONTEND_URL=http://localhost:5173
 ```
 
 ### 2. Backend Setup
+
 ```bash
-# Start backend from workspace root
 cd backend
 python -m venv .venv
 
-# Activate virtualenv (Windows PowerShell)
+# Windows PowerShell
 ..\.venv\Scripts\Activate.ps1
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Run local dev server
 uvicorn app.main:app --reload
 ```
 
+Backend runs at [http://localhost:8000](http://localhost:8000) — API docs at [http://localhost:8000/docs](http://localhost:8000/docs).
+
 ### 3. Frontend Setup
+
 ```bash
-# Start frontend from workspace root
 cd frontend
 npm install
 npm run dev
 ```
+
+Frontend runs at [http://localhost:5173](http://localhost:5173).
+
+---
+
+## Production Environment Variables
+
+### Vercel (Frontend)
+
+| Variable | Value |
+|----------|-------|
+| `VITE_API_URL` | `https://fixhire.onrender.com` |
+
+### Render (Backend)
+
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | PostgreSQL connection string from Neon |
+| `JWT_SECRET_KEY` | Long random secret string |
+| `GEMINI_API_KEY` | Google Gemini API key |
+| `GEMINI_MODEL_NAME` | `gemini-2.5-flash` |
+| `FRONTEND_URL` | `https://fix-hire.vercel.app` |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GOOGLE_OAUTH_REDIRECT_URI` | `https://fixhire.onrender.com/api/auth/google/callback` |
+
+### Google Cloud Console (OAuth)
+
+| Setting | Value |
+|---------|-------|
+| Authorized JavaScript origins | `https://fix-hire.vercel.app` |
+| Authorized redirect URIs | `https://fixhire.onrender.com/api/auth/google/callback` |
+
+---
+
+## Deployment Architecture
+
+```
+GitHub (main branch)
+    ├── push → Vercel  → https://fix-hire.vercel.app  (React frontend)
+    └── push → Render  → https://fixhire.onrender.com (FastAPI backend)
+                              └── Neon PostgreSQL (DATABASE_URL)
+```
+
+Every push to `main` auto-redeploys both frontend and backend.
+
+---
+
+## Project Structure
+
+```
+FixHire/
+├── backend/
+│   ├── app/
+│   │   ├── api/          # Route handlers (auth, analysis, jobs)
+│   │   ├── core/         # Config, database, security
+│   │   ├── models/       # SQLAlchemy models
+│   │   ├── schemas/      # Pydantic request/response schemas
+│   │   └── utils/        # Resume storage helpers
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── pages/        # Landing, Login, Dashboards, JobApply
+│   │   ├── context/      # AuthContext
+│   │   ├── services/     # API client
+│   │   └── config.js     # API URL configuration
+│   ├── vercel.json
+│   └── package.json
+├── render.yaml           # Render deployment blueprint
+├── .env.example          # Environment variable template
+└── README.md
+```
+
+---
+
+## Backup & Rollback
+
+A pre-deployment snapshot of Phase 3 is preserved on GitHub:
+
+| Reference | Commit | Description |
+|-----------|--------|-------------|
+| Branch `backup/phase3-complete` | `865811c` | Phase 3 complete, before OAuth & deploy |
+| Tag `phase3-complete-backup` | `865811c` | Same snapshot, pinned tag |
+
+To restore: `git checkout backup/phase3-complete`
+
+---
+
+## License
+
+This project is for educational and portfolio purposes.
