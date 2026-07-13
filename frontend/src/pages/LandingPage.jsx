@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, FileText, BarChart2, ShieldCheck, Briefcase, Zap } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Sparkles, FileText, BarChart2, ShieldCheck, Briefcase, Zap, User, LogOut } from "lucide-react";
 import { GITHUB_URL, LINKEDIN_URL } from "../config.js";
+import { useAuth } from "../context/AuthContext";
 
 function GitHubIcon({ className }) {
   return (
@@ -19,6 +20,16 @@ function LinkedInIcon({ className }) {
 }
 
 export default function LandingPage() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const dashboardPath = user?.role === "recruiter" ? "/recruiter" : "/candidate";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-hidden">
       
@@ -67,12 +78,34 @@ export default function LandingPage() {
                 <LinkedInIcon className="w-4 h-4" />
               </a>
             </div>
-            <Link to="/login" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-              Sign In
-            </Link>
-            <Link to="/register" className="btn-primary py-2 px-4 text-sm rounded-lg shadow-none">
-              Get Started
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-300">
+                  <User className="w-4 h-4 text-brand-light" />
+                  <span className="font-medium">{user?.full_name}</span>
+                </div>
+                <Link to={dashboardPath} className="btn-primary py-2 px-4 text-sm rounded-lg shadow-none">
+                  Go to Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="p-2.5 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
+                  title="Log Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                  Sign In
+                </Link>
+                <Link to="/register" className="btn-primary py-2 px-4 text-sm rounded-lg shadow-none">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -100,10 +133,17 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
-              <span>Start Free Trial</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            {isAuthenticated ? (
+              <Link to={dashboardPath} className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
+                <span>Go to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
+                <span>Start Free Trial</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
             <a href="#features" className="btn-secondary w-full sm:w-auto">
               Explore Features
             </a>
