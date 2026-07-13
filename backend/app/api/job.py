@@ -261,6 +261,7 @@ def create_job(
     new_job = Job(
         user_id=current_user.id,
         title=job_in.title,
+        company_name=job_in.company_name,
         description=job_in.description,
         requirements=job_in.requirements,
         location=job_in.location

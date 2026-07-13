@@ -10,6 +10,7 @@ class Job(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     
     title = Column(String, nullable=False)
+    company_name = Column(String, nullable=True)  # Optional company/organisation name
     description = Column(Text, nullable=False)
     requirements = Column(Text, nullable=True)  # Desired skills/keywords
     location = Column(String, nullable=True)

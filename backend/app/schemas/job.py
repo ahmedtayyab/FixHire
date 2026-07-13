@@ -5,6 +5,7 @@ from app.schemas.screening import ScreeningResponse
 
 class JobBase(BaseModel):
     title: str
+    company_name: Optional[str] = None
     description: str
     requirements: Optional[str] = None
     location: Optional[str] = None

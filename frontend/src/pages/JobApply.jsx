@@ -324,6 +324,9 @@ export default function JobApply() {
                 <h1 className="text-3xl font-extrabold text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
                   {job.title}
                 </h1>
+                {job.company_name && (
+                  <p className="text-base font-semibold text-brand-light mt-1">{job.company_name}</p>
+                )}
                 
                 <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-400 border-b border-white/5 pb-5">
                   <span className="flex items-center gap-1">

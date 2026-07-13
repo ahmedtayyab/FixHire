@@ -59,6 +59,7 @@ export default function RecruiterDashboard() {
   
   const [newJob, setNewJob] = useState({
     title: "",
+    company_name: "",
     location: "",
     requirements: "",
     description: ""
@@ -399,6 +400,9 @@ export default function RecruiterDashboard() {
                   }`}
                 >
                   <h3 className="font-semibold text-sm text-white truncate">{job.title}</h3>
+                  {job.company_name && (
+                    <p className="text-[11px] text-brand-light/70 mt-0.5 truncate">{job.company_name}</p>
+                  )}
                   <div className="flex items-center gap-1 text-[11px] text-gray-500 mt-2">
                     <MapPin className="w-3 h-3" />
                     <span>{job.location || "Remote"}</span>
@@ -987,6 +991,16 @@ export default function RecruiterDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
+                  <label className="form-label text-xs font-bold uppercase tracking-wider">Company Name</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Acme Corp"
+                    value={newJob.company_name}
+                    onChange={e => setNewJob(prev => ({ ...prev, company_name: e.target.value }))}
+                    className="form-input text-sm"
+                  />
+                </div>
+                <div>
                   <label className="form-label text-xs font-bold uppercase tracking-wider">Location</label>
                   <input
                     type="text"
@@ -996,16 +1010,17 @@ export default function RecruiterDashboard() {
                     className="form-input text-sm"
                   />
                 </div>
-                <div>
-                  <label className="form-label text-xs font-bold uppercase tracking-wider">Required Skills (Comma separated)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. React, FastAPI, Docker"
-                    value={newJob.requirements}
-                    onChange={e => setNewJob(prev => ({ ...prev, requirements: e.target.value }))}
-                    className="form-input text-sm"
-                  />
-                </div>
+              </div>
+
+              <div>
+                <label className="form-label text-xs font-bold uppercase tracking-wider">Required Skills (Comma separated)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. React, FastAPI, Docker"
+                  value={newJob.requirements}
+                  onChange={e => setNewJob(prev => ({ ...prev, requirements: e.target.value }))}
+                  className="form-input text-sm"
+                />
               </div>
 
               <div>
@@ -1112,6 +1127,9 @@ export default function RecruiterDashboard() {
               {/* Title + Meta */}
               <div>
                 <h2 className="text-xl font-extrabold text-white">{jobDetailsTarget.title}</h2>
+                {jobDetailsTarget.company_name && (
+                  <p className="text-sm text-brand-light font-medium mt-1">{jobDetailsTarget.company_name}</p>
+                )}
                 <div className="flex items-center gap-4 mt-2">
                   <span className="text-xs text-gray-400 flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-brand" />
