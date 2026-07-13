@@ -67,3 +67,7 @@ node_modules/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Test / scratch files in root
+*.pdf
+.git-diff-changes.txt
