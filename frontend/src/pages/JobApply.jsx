@@ -390,7 +390,7 @@ export default function JobApply() {
                         type="text"
                         required
                         disabled={submitting}
-                        placeholder="John Doe"
+                        placeholder="Your Full Name"
                         value={name}
                         onChange={e => setName(e.target.value)}
                         className="form-input pl-9 text-sm"
@@ -408,7 +408,7 @@ export default function JobApply() {
                         type="email"
                         required
                         disabled={submitting}
-                        placeholder="john.doe@example.com"
+                        placeholder="your@email.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         className="form-input pl-9 text-sm"
