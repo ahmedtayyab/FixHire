@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Sparkles, FileText, BarChart2, ShieldCheck, Briefcase, Zap, User, LogOut } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, Briefcase, Zap, User, LogOut } from "lucide-react";
 import { GITHUB_URL, LINKEDIN_URL } from "../config.js";
 import { useAuth } from "../context/AuthContext";
 
@@ -22,6 +23,11 @@ function LinkedInIcon({ className }) {
 export default function LandingPage() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const videoFrameRef = useRef(null);
+  const [videoStyle, setVideoStyle] = useState({
+    transform: "perspective(1200px) scale(1) translateY(0px)",
+    opacity: 1,
+  });
 
   const dashboardPath = user?.role === "recruiter" ? "/recruiter" : "/candidate";
 
@@ -30,12 +36,75 @@ export default function LandingPage() {
     navigate("/");
   };
 
+  // Scroll-linked zoom / depth on the hero video preview.
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return undefined;
+
+    let frameId = 0;
+
+    const updateVideoDepth = () => {
+      const el = videoFrameRef.current;
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      // 0 when centered, increases as it leaves the viewport.
+      const progress = Math.min(1, Math.max(0, (viewport * 0.55 - rect.top) / (viewport * 0.9)));
+      const scale = 1 + progress * 0.14;
+      const translateY = progress * -36;
+      const rotateX = progress * 4;
+      const opacity = 1 - progress * 0.15;
+
+      setVideoStyle({
+        transform: `perspective(1200px) scale(${scale}) translateY(${translateY}px) rotateX(${rotateX}deg)`,
+        opacity,
+      });
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(updateVideoDepth);
+    };
+
+    updateVideoDepth();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Soft reveal + scale-in for lower sections.
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return undefined;
+
+    const nodes = document.querySelectorAll("[data-scroll-zoom]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-inview");
+          }
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="relative min-h-screen flex flex-col justify-between overflow-hidden">
       
       {/* Decorative Glow Elements */}
-      <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-brand/10 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] rounded-full bg-accent/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-brand/10 blur-[100px] pointer-events-none landing-glow-a" />
+      <div className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] rounded-full bg-accent/5 blur-[120px] pointer-events-none landing-glow-b" />
 
       {/* Header / Navbar */}
       <header className="sticky top-0 z-50 border-b border-white/5 bg-dark-950/70 backdrop-blur-md">
@@ -149,16 +218,25 @@ export default function LandingPage() {
             </a>
           </div>
 
-          {/* Glowing Platform Preview Card */}
-          <div className="mt-20 relative rounded-2xl border border-white/5 bg-dark-900/40 p-4 shadow-2xl">
+          {/* Glowing Platform Preview Card — scroll-linked zoom depth */}
+          <div
+            ref={videoFrameRef}
+            className="mt-20 relative rounded-2xl border border-white/5 bg-dark-900/40 p-4 shadow-2xl will-change-transform"
+            style={{
+              transform: videoStyle.transform,
+              opacity: videoStyle.opacity,
+              transformOrigin: "center top",
+              transition: "transform 80ms linear, opacity 80ms linear",
+            }}
+          >
             <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-3xl -z-10" />
             <div className="rounded-xl border border-white/5 bg-dark-950/80 overflow-hidden aspect-[16/9] flex items-center justify-center relative group">
-              <video 
-                src="/ai_matching_preview.mp4" 
-                className="w-full h-full object-cover"
-                autoPlay 
-                loop 
-                muted 
+              <video
+                src="/ai_matching_preview.mp4"
+                className="w-full h-full object-cover scale-[1.02]"
+                autoPlay
+                loop
+                muted
                 playsInline
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent pointer-events-none" />
@@ -169,7 +247,7 @@ export default function LandingPage() {
         {/* Portals Comparison Section */}
         <section id="features" className="py-24 bg-dark-900/20 border-y border-white/5">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
+            <div className="text-center mb-16" data-scroll-zoom>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Tailored Experience for Both Sides</h2>
               <p className="text-gray-400 max-w-xl mx-auto">
                 Whether you're looking for your next dream role or hiring the perfect candidate, FixHire has you covered.
@@ -178,7 +256,11 @@ export default function LandingPage() {
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* Candidate Side */}
-              <div id="candidates" className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-brand/20 transition-all duration-300">
+              <div
+                id="candidates"
+                data-scroll-zoom
+                className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-brand/20 transition-all duration-300"
+              >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand mb-6">
                     <FileText className="w-6 h-6" />
@@ -208,7 +290,12 @@ export default function LandingPage() {
               </div>
 
               {/* Recruiter Side */}
-              <div id="recruiters" className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-accent/20 transition-all duration-300">
+              <div
+                id="recruiters"
+                data-scroll-zoom
+                className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-accent/20 transition-all duration-300"
+                style={{ transitionDelay: "80ms" }}
+              >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-6">
                     <Briefcase className="w-6 h-6" />
@@ -228,7 +315,7 @@ export default function LandingPage() {
                     </li>
                     <li className="flex items-center space-x-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                      <span>Company Knowledge Base Integration (RAG)</span>
+                      <span>Shareable Apply Links & Instant AI Screening</span>
                     </li>
                   </ul>
                 </div>
@@ -241,7 +328,7 @@ export default function LandingPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-24 max-w-7xl mx-auto px-6">
+        <section className="py-24 max-w-7xl mx-auto px-6" data-scroll-zoom>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">95%</div>
