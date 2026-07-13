@@ -152,16 +152,16 @@ export default function LandingPage() {
           {/* Glowing Platform Preview Card */}
           <div className="mt-20 relative rounded-2xl border border-white/5 bg-dark-900/40 p-4 shadow-2xl">
             <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-3xl -z-10" />
-            <div className="rounded-xl border border-white/5 bg-dark-950/80 overflow-hidden aspect-[16/9] flex items-center justify-center">
-              <div className="text-center p-8">
-                <div className="w-16 h-16 rounded-full bg-brand-glow border border-brand/20 flex items-center justify-center mx-auto mb-6">
-                  <Sparkles className="w-8 h-8 text-brand" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">AI Matching Preview</h3>
-                <p className="text-gray-400 max-w-md mx-auto text-sm">
-                  Register or sign in to experience real-time resume parsing, automated ATS scoring, and recruiter ranking dashboards.
-                </p>
-              </div>
+            <div className="rounded-xl border border-white/5 bg-dark-950/80 overflow-hidden aspect-[16/9] flex items-center justify-center relative group">
+              <video 
+                src="/ai_matching_preview.mp4" 
+                className="w-full h-full object-cover"
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>
         </section>
