@@ -25,7 +25,8 @@ import {
   Check, 
   Search,
   Copy,
-  ExternalLink
+  ExternalLink,
+  Eye
 } from "lucide-react";
 
 export default function RecruiterDashboard() {
@@ -46,6 +47,8 @@ export default function RecruiterDashboard() {
   // Modals
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [showResumeModal, setShowResumeModal] = useState(false);
+  const [showJobDetailsModal, setShowJobDetailsModal] = useState(false);
+  const [jobDetailsTarget, setJobDetailsTarget] = useState(null);
   const [copied, setCopied] = useState(false);
   
   // Search & Filter States
@@ -403,16 +406,29 @@ export default function RecruiterDashboard() {
                     <span className="text-[10px] text-gray-600">
                       {new Date(job.created_at).toLocaleDateString()}
                     </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteJob(job.id);
-                      }}
-                      className="text-gray-600 hover:text-rose-400 transition-colors p-1"
-                      title="Delete Job"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setJobDetailsTarget(job);
+                          setShowJobDetailsModal(true);
+                        }}
+                        className="text-gray-600 hover:text-brand transition-colors p-1"
+                        title="View Job Details"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteJob(job.id);
+                        }}
+                        className="text-gray-600 hover:text-rose-400 transition-colors p-1"
+                        title="Delete Job"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
@@ -1061,6 +1077,84 @@ export default function RecruiterDashboard() {
               <button
                 type="button"
                 onClick={() => setShowResumeModal(false)}
+                className="btn-secondary text-xs px-4 py-2"
+              >
+                Close
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Job Details Modal */}
+      {showJobDetailsModal && jobDetailsTarget && (
+        <div className="fixed inset-0 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="glass-card w-full max-w-xl overflow-hidden border-brand/20 shadow-brand/10 flex flex-col max-h-[85vh]">
+
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-dark-900/60 shrink-0">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-brand" /> Job Details
+              </h3>
+              <button
+                onClick={() => { setShowJobDetailsModal(false); setJobDetailsTarget(null); }}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto flex flex-col gap-5 text-left">
+
+              {/* Title + Meta */}
+              <div>
+                <h2 className="text-xl font-extrabold text-white">{jobDetailsTarget.title}</h2>
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-brand" />
+                    {jobDetailsTarget.location || "Remote"}
+                  </span>
+                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-brand" />
+                    Posted {new Date(jobDetailsTarget.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Required Skills */}
+              {jobDetailsTarget.requirements && (
+                <div>
+                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Required Skills</h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {jobDetailsTarget.requirements.split(',').map((req, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2.5 py-1 rounded-lg bg-brand/10 border border-brand/20 text-xs text-brand-light font-medium"
+                      >
+                        {req.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Job Description */}
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Job Description</h4>
+                <div className="p-4 rounded-xl bg-dark-950/40 border border-gray-800 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
+                  {jobDetailsTarget.description || "No description provided."}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-white/5 flex justify-end bg-dark-900/40 shrink-0">
+              <button
+                type="button"
+                onClick={() => { setShowJobDetailsModal(false); setJobDetailsTarget(null); }}
                 className="btn-secondary text-xs px-4 py-2"
               >
                 Close
