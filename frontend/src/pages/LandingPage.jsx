@@ -49,12 +49,20 @@ export default function LandingPage() {
 
       const rect = el.getBoundingClientRect();
       const viewport = window.innerHeight || 1;
-      // 0 when centered, increases as it leaves the viewport.
-      const progress = Math.min(1, Math.max(0, (viewport * 0.55 - rect.top) / (viewport * 0.9)));
-      const scale = 1 + progress * 0.14;
-      const translateY = progress * -36;
-      const rotateX = progress * 4;
-      const opacity = 1 - progress * 0.15;
+      const elementCenter = rect.top + rect.height / 2;
+      const viewportCenter = viewport * 0.48;
+
+      // -1 = still below (approaching), 0 = centered (peak zoom), +1 = scrolled past
+      const raw = (viewportCenter - elementCenter) / (viewport * 0.72);
+      const t = Math.max(-1, Math.min(1, raw));
+      // 1 at center, falls toward 0 as you approach or leave
+      const focus = 1 - Math.abs(t);
+
+      // Zoom in toward center, zoom out after scrolling past
+      const scale = 0.92 + focus * 0.16;
+      const translateY = t * 28;
+      const rotateX = t * -5;
+      const opacity = 0.78 + focus * 0.22;
 
       setVideoStyle({
         transform: `perspective(1200px) scale(${scale}) translateY(${translateY}px) rotateX(${rotateX}deg)`,
