@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 import { 
@@ -177,17 +178,17 @@ export default function CandidateDashboard() {
       {/* Top Navbar */}
       <header className="border-b border-white/5 bg-dark-900/60 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight text-white">
               FixHire
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand/10 text-brand-light border border-brand/20">
-              Candidate
-            </span>
-          </div>
+          </Link>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand/10 text-brand-light border border-brand/20">
+            Candidate
+          </span>
 
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3 px-3 py-1.5 rounded-xl bg-dark-800/40 border border-gray-800">
