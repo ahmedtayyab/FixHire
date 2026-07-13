@@ -22,6 +22,19 @@ from app.utils.resume_storage import (
 # and creates the corresponding tables if they do not exist.
 Base.metadata.create_all(bind=engine)
 
+def apply_migrations() -> None:
+    """Run simple schema migrations for existing tables."""
+    from sqlalchemy import inspect, text
+    inspector = inspect(engine)
+    if not inspector.has_table('jobs'):
+        return
+    columns = [col['name'] for col in inspector.get_columns('jobs')]
+    if 'company_name' not in columns:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE jobs ADD COLUMN company_name VARCHAR"))
+
+apply_migrations()
+
 
 def backfill_missing_screening_pdfs() -> None:
     """Restore PDF bytes for screenings created before resume storage was enabled."""
