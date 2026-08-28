@@ -331,7 +331,7 @@ export default function LandingPage() {
 
         {/* Stats Section */}
         <section className="py-24 max-w-6xl mx-auto px-6 relative z-10" data-scroll-zoom>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">95%</div>
               <div className="text-zinc-500 text-sm">ATS Compatibility Rate</div>
@@ -340,11 +340,7 @@ export default function LandingPage() {
               <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">10x</div>
               <div className="text-zinc-500 text-sm">Faster Screening Speed</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">&lt;3s</div>
-              <div className="text-zinc-500 text-sm">AI Response Speed</div>
-            </div>
-            <div className="text-center">
+            <div className="text-center col-span-2 md:col-span-1">
               <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">100%</div>
               <div className="text-zinc-500 text-sm">Data Privacy & Security</div>
             </div>
