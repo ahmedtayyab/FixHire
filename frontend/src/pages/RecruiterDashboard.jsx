@@ -319,16 +319,16 @@ export default function RecruiterDashboard() {
   ).length || 0;
 
   return (
-    <div className="min-h-screen flex flex-col justify-between text-gray-100 selection:bg-brand selection:text-white">
+    <div className="min-h-screen flex flex-col justify-between text-zinc-100 selection:bg-indigo-500/30 selection:text-white">
       
       {/* Top Navbar */}
-      <header className="border-b border-white/5 bg-dark-900/60 backdrop-blur-md sticky top-0 z-30">
+      <header className="nav-glass z-30">
         <div className="max-w-[1536px] mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/10">
+            <div className="logo-mark">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+            <span className="text-2xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-300">
               FixHire
             </span>
           </Link>
@@ -337,13 +337,13 @@ export default function RecruiterDashboard() {
           </span>
 
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3 px-3 py-1.5 rounded-xl bg-dark-800/40 border border-gray-800">
+            <div className="avatar-chip">
               <User className="w-4 h-4 text-brand-light" />
-              <span className="text-sm font-medium text-gray-300">{user?.full_name}</span>
+              <span className="text-sm font-medium text-zinc-300">{user?.full_name}</span>
             </div>
             <button
               onClick={logout}
-              className="p-2.5 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
+              className="btn-ghost p-2.5 rounded-lg border border-white/[0.08]"
               title="Log Out"
             >
               <LogOut className="w-4 h-4" />
@@ -375,12 +375,12 @@ export default function RecruiterDashboard() {
             {loadingJobs ? (
               <div className="flex flex-col items-center justify-center py-10 gap-2">
                 <Loader2 className="w-6 h-6 animate-spin text-brand" />
-                <span className="text-xs text-gray-500">Loading jobs...</span>
+                <span className="text-xs text-zinc-500">Loading jobs...</span>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="text-center py-8 px-4 rounded-xl border border-gray-800/50 bg-dark-900/20">
-                <AlertTriangle className="w-6 h-6 text-gray-600 mx-auto mb-2" />
-                <p className="text-xs text-gray-400">No jobs posted yet.</p>
+              <div className="text-center py-8 px-4 rounded-xl border border-white/[0.08]/50 bg-dark-900/20">
+                <AlertTriangle className="w-6 h-6 text-zinc-600 mx-auto mb-2" />
+                <p className="text-xs text-zinc-400">No jobs posted yet.</p>
                 <button
                   onClick={() => setShowPostJobModal(true)}
                   className="mt-3 px-3 py-1.5 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-dark transition-all duration-200"
@@ -396,19 +396,19 @@ export default function RecruiterDashboard() {
                   className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer text-left ${
                     selectedJob?.id === job.id
                       ? "border-brand/40 bg-brand/5 shadow-md shadow-brand/5"
-                      : "border-gray-800/80 bg-dark-900/30 hover:border-gray-700 hover:bg-dark-900/50"
+                      : "border-white/[0.08]/80 bg-dark-900/30 hover:border-white/[0.06] hover:bg-dark-900/50"
                   }`}
                 >
                   <h3 className="font-semibold text-sm text-white truncate">{job.title}</h3>
                   {job.company_name && (
                     <p className="text-[11px] text-brand-light/70 mt-0.5 truncate">{job.company_name}</p>
                   )}
-                  <div className="flex items-center gap-1 text-[11px] text-gray-500 mt-2">
+                  <div className="flex items-center gap-1 text-[11px] text-zinc-500 mt-2">
                     <MapPin className="w-3 h-3" />
                     <span>{job.location || "Remote"}</span>
                   </div>
                   <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
-                    <span className="text-[10px] text-gray-600">
+                    <span className="text-[10px] text-zinc-600">
                       {new Date(job.created_at).toLocaleDateString()}
                     </span>
                     <div className="flex items-center gap-1">
@@ -418,7 +418,7 @@ export default function RecruiterDashboard() {
                           setJobDetailsTarget(job);
                           setShowJobDetailsModal(true);
                         }}
-                        className="text-gray-600 hover:text-brand transition-colors p-1"
+                        className="text-zinc-600 hover:text-brand transition-colors p-1"
                         title="View Job Details"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -428,7 +428,7 @@ export default function RecruiterDashboard() {
                           e.stopPropagation();
                           handleDeleteJob(job.id);
                         }}
-                        className="text-gray-600 hover:text-rose-400 transition-colors p-1"
+                        className="text-zinc-600 hover:text-rose-400 transition-colors p-1"
                         title="Delete Job"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -454,10 +454,10 @@ export default function RecruiterDashboard() {
                     <div>
                       <h1 className="text-xl font-extrabold text-white">{selectedJob.title}</h1>
                       <div className="flex gap-4 mt-2">
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                        <span className="text-xs text-zinc-400 flex items-center gap-1">
                           <MapPin className="w-3.5 h-3.5 text-brand" /> {selectedJob.location || "Remote"}
                         </span>
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                        <span className="text-xs text-zinc-400 flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 text-brand" /> Posted {new Date(selectedJob.created_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -482,7 +482,7 @@ export default function RecruiterDashboard() {
                   {selectedJob.requirements && (
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {selectedJob.requirements.split(',').map((req, idx) => (
-                        <span key={idx} className="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] text-gray-400">
+                        <span key={idx} className="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[10px] text-zinc-400">
                           {req.trim()}
                         </span>
                       ))}
@@ -500,7 +500,7 @@ export default function RecruiterDashboard() {
                       </div>
                       <div>
                         <div className="text-base font-extrabold text-white">{totalScreenings}</div>
-                        <div className="text-[9px] text-gray-500 uppercase tracking-wider font-semibold">Applicants</div>
+                        <div className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold">Applicants</div>
                       </div>
                     </div>
 
@@ -510,7 +510,7 @@ export default function RecruiterDashboard() {
                       </div>
                       <div>
                         <div className="text-base font-extrabold text-white">{avgScore}%</div>
-                        <div className="text-[9px] text-gray-500 uppercase tracking-wider font-semibold">Avg Match</div>
+                        <div className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold">Avg Match</div>
                       </div>
                     </div>
 
@@ -520,7 +520,7 @@ export default function RecruiterDashboard() {
                       </div>
                       <div>
                         <div className="text-base font-extrabold text-white">{strongHires}</div>
-                        <div className="text-[9px] text-gray-500 uppercase tracking-wider font-semibold">Strong Fits</div>
+                        <div className="text-[9px] text-zinc-500 uppercase tracking-wider font-semibold">Strong Fits</div>
                       </div>
                     </div>
                   </div>
@@ -534,7 +534,7 @@ export default function RecruiterDashboard() {
                       className={`glass-card p-3 border-dashed border-2 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 h-full min-h-[110px] ${
                         uploading
                           ? "border-brand bg-brand/5 pointer-events-none"
-                          : "border-gray-800 hover:border-brand/40 hover:bg-dark-900/40"
+                          : "border-white/[0.08] hover:border-brand/40 hover:bg-dark-900/40"
                       }`}
                     >
                       <input
@@ -549,7 +549,7 @@ export default function RecruiterDashboard() {
                         <div className="py-1">
                           <Loader2 className="w-6 h-6 animate-spin text-brand mx-auto mb-2" />
                           <h4 className="text-xs font-semibold text-white">Analyzing Candidates...</h4>
-                          <p className="text-[9px] text-gray-400 mt-0.5">Extracting resume details with AI.</p>
+                          <p className="text-[9px] text-zinc-400 mt-0.5">Extracting resume details with AI.</p>
                         </div>
                       ) : (
                         <>
@@ -557,7 +557,7 @@ export default function RecruiterDashboard() {
                             <UploadCloud className="w-4 h-4" />
                           </div>
                           <h4 className="text-xs font-semibold text-white">Upload Applicant Resumes</h4>
-                          <p className="text-[9px] text-gray-400 mt-0.5">Drag & drop PDFs or click to browse</p>
+                          <p className="text-[9px] text-zinc-400 mt-0.5">Drag & drop PDFs or click to browse</p>
                         </>
                       )}
                     </div>
@@ -568,7 +568,7 @@ export default function RecruiterDashboard() {
                 <div className="glass-card overflow-hidden flex flex-col flex-grow min-h-0">
                   <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white">Screening Matrix</h3>
-                    <span className="text-[11px] text-gray-500">Sorted by match score</span>
+                    <span className="text-[11px] text-zinc-500">Sorted by match score</span>
                   </div>
 
                   {/* Filters Bar */}
@@ -576,7 +576,7 @@ export default function RecruiterDashboard() {
                     <div className="px-6 py-3 bg-white/2 border-b border-white/5 flex flex-col md:flex-row gap-3">
                       {/* Search Input */}
                       <div className="relative flex-grow">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
                           <Search className="w-4 h-4" />
                         </div>
                         <input
@@ -618,36 +618,36 @@ export default function RecruiterDashboard() {
                   {loadingJobDetail ? (
                     <div className="flex flex-col items-center justify-center py-16 gap-3">
                       <Loader2 className="w-8 h-8 animate-spin text-brand" />
-                      <span className="text-xs text-gray-400">Loading screening list...</span>
+                      <span className="text-xs text-zinc-400">Loading screening list...</span>
                     </div>
                   ) : !selectedJob.screenings || selectedJob.screenings.length === 0 ? (
                     <div className="text-center py-16 px-4">
-                      <AlertTriangle className="w-8 h-8 text-gray-700 mx-auto mb-3" />
-                      <h4 className="text-sm font-semibold text-gray-400">No Screened Candidates Yet</h4>
-                      <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                      <AlertTriangle className="w-8 h-8 text-zinc-700 mx-auto mb-3" />
+                      <h4 className="text-sm font-semibold text-zinc-400">No Screened Candidates Yet</h4>
+                      <p className="text-xs text-zinc-500 mt-1 max-w-xs mx-auto">
                         Upload some applicant PDF resumes above to evaluate them side-by-side with AI insights.
                       </p>
                     </div>
                   ) : filteredScreenings.length === 0 ? (
                     <div className="text-center py-16 px-4">
-                      <Search className="w-8 h-8 text-gray-700 mx-auto mb-3" />
-                      <h4 className="text-sm font-semibold text-gray-400">No Matches Found</h4>
-                      <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto">
+                      <Search className="w-8 h-8 text-zinc-700 mx-auto mb-3" />
+                      <h4 className="text-sm font-semibold text-zinc-400">No Matches Found</h4>
+                      <p className="text-xs text-zinc-500 mt-1 max-w-xs mx-auto">
                         Adjust your search queries or change your status and score filters to see candidates.
                       </p>
                     </div>
                   ) : (
-                    <div className="overflow-auto flex-grow min-h-0">
-                      <table className="w-full text-left border-collapse">
+                    <div className="saas-table-wrap overflow-auto flex-grow min-h-0">
+                      <table className="saas-table">
                         <thead>
-                          <tr className="border-b border-white/5 bg-white/2">
-                            <th className="px-6 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Candidate</th>
-                            <th className="px-6 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">Score</th>
-                            <th className="px-6 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Fit Recommendation</th>
-                            <th className="px-6 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right"></th>
+                          <tr>
+                            <th className="px-6 py-3.5">Candidate</th>
+                            <th className="px-6 py-3.5 text-center">Score</th>
+                            <th className="px-6 py-3.5">Fit Recommendation</th>
+                            <th className="px-6 py-3.5 text-right"></th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody>
                           {filteredScreenings.map(scr => (
                             <tr
                               key={scr.id}
@@ -668,13 +668,13 @@ export default function RecruiterDashboard() {
                                     target="_blank"
                                     rel="noreferrer"
                                     onClick={(e) => e.stopPropagation()}
-                                    className="p-1 text-gray-400 hover:text-brand hover:bg-brand/10 rounded transition-all"
+                                    className="p-1 text-zinc-400 hover:text-brand hover:bg-brand/10 rounded transition-all"
                                     title="Open original PDF resume in a new tab"
                                   >
                                     <ExternalLink className="w-3.5 h-3.5" />
                                   </a>
                                 </div>
-                                <div className="text-[11px] text-gray-500 flex items-center gap-1.5 mt-1">
+                                <div className="text-[11px] text-zinc-500 flex items-center gap-1.5 mt-1">
                                   <FileText className="w-3 h-3" />
                                   <span className="truncate max-w-[150px]" title={scr.resume_filename}>
                                     {scr.resume_filename}
@@ -694,7 +694,7 @@ export default function RecruiterDashboard() {
                               <td className="px-6 py-4 text-right">
                                 <button
                                   onClick={(e) => handleDeleteScreening(scr.id, e)}
-                                  className="text-gray-600 hover:text-rose-400 transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                  className="text-zinc-600 hover:text-rose-400 transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100"
                                   title="Delete screening report"
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -720,7 +720,7 @@ export default function RecruiterDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="text-lg font-bold text-white">{selectedCandidate.candidate_name}</h3>
-                          <p className="text-xs text-gray-400 mt-1 flex items-center gap-1.5">
+                          <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5">
                             <FileText className="w-3.5 h-3.5 text-accent" /> {selectedCandidate.resume_filename}
                           </p>
                           <div className="flex items-center gap-3 mt-2">
@@ -730,7 +730,7 @@ export default function RecruiterDashboard() {
                             >
                               <FileText className="w-3.5 h-3.5" /> View Resume Text
                             </button>
-                            <span className="text-[10px] text-gray-700">|</span>
+                            <span className="text-[10px] text-zinc-700">|</span>
                             <a
                               href={`${API_BASE_URL}/jobs/screenings/${selectedCandidate.id}/pdf?token=${localStorage.getItem("fixhire_token")}`}
                               target="_blank"
@@ -766,8 +766,8 @@ export default function RecruiterDashboard() {
                           </span>
                         </div>
                         <div className="flex-grow">
-                          <span className="text-[10px] text-gray-500 uppercase font-semibold">AI Compatibility Match</span>
-                          <p className="text-xs text-gray-300 font-medium leading-relaxed mt-0.5">
+                          <span className="text-[10px] text-zinc-500 uppercase font-semibold">AI Compatibility Match</span>
+                          <p className="text-xs text-zinc-300 font-medium leading-relaxed mt-0.5">
                             {selectedCandidate.analysis_results.fit_summary}
                           </p>
                         </div>
@@ -788,7 +788,7 @@ export default function RecruiterDashboard() {
                           className={`flex-1 py-3 border-b-2 text-center transition-all ${
                             activeTab === tab.id
                               ? "border-accent text-accent bg-accent/5"
-                              : "border-transparent text-gray-500 hover:text-gray-300"
+                              : "border-transparent text-zinc-500 hover:text-zinc-300"
                           }`}
                         >
                           {tab.label}
@@ -802,22 +802,22 @@ export default function RecruiterDashboard() {
                       {activeTab === "overview" && (
                         <div className="flex flex-col gap-4 text-left">
                           <div>
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recommendation Summary</h4>
-                            <div className="p-4 rounded-xl bg-dark-950/40 border border-gray-800 text-sm leading-relaxed text-gray-300">
+                            <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Recommendation Summary</h4>
+                            <div className="p-4 rounded-xl bg-dark-950/40 border border-white/[0.08] text-sm leading-relaxed text-zinc-300">
                               {selectedCandidate.analysis_results.fit_summary}
                             </div>
                           </div>
 
                           <div>
-                            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Details</h4>
-                            <ul className="text-xs text-gray-400 space-y-2.5">
+                            <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Details</h4>
+                            <ul className="text-xs text-zinc-400 space-y-2.5">
                               <li className="flex justify-between py-1.5 border-b border-white/2">
                                 <span>Filename</span>
-                                <span className="font-medium text-gray-300 truncate max-w-[200px]">{selectedCandidate.resume_filename}</span>
+                                <span className="font-medium text-zinc-300 truncate max-w-[200px]">{selectedCandidate.resume_filename}</span>
                               </li>
                               <li className="flex justify-between py-1.5 border-b border-white/2">
                                 <span>Processed On</span>
-                                <span className="font-medium text-gray-300">{new Date(selectedCandidate.created_at).toLocaleString()}</span>
+                                <span className="font-medium text-zinc-300">{new Date(selectedCandidate.created_at).toLocaleString()}</span>
                               </li>
                               <li className="flex justify-between py-1.5 border-b border-white/2">
                                 <span>Status</span>
@@ -836,11 +836,11 @@ export default function RecruiterDashboard() {
                             </h4>
                             <ul className="space-y-2">
                               {selectedCandidate.analysis_results.strengths?.map((str, idx) => (
-                                <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-xs text-gray-300 leading-relaxed">
+                                <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-xs text-zinc-300 leading-relaxed">
                                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                                   <span>{str}</span>
                                 </li>
-                              )) || <li className="text-xs text-gray-500">No strengths identified</li>}
+                              )) || <li className="text-xs text-zinc-500">No strengths identified</li>}
                             </ul>
                           </div>
 
@@ -850,11 +850,11 @@ export default function RecruiterDashboard() {
                             </h4>
                             <ul className="space-y-2">
                               {selectedCandidate.analysis_results.gaps?.map((gap, idx) => (
-                                <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-rose-500/5 border border-rose-500/10 text-xs text-gray-300 leading-relaxed">
+                                <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-rose-500/5 border border-rose-500/10 text-xs text-zinc-300 leading-relaxed">
                                   <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
                                   <span>{gap}</span>
                                 </li>
-                              )) || <li className="text-xs text-gray-500">No major gaps identified</li>}
+                              )) || <li className="text-xs text-zinc-500">No major gaps identified</li>}
                             </ul>
                           </div>
                         </div>
@@ -862,19 +862,19 @@ export default function RecruiterDashboard() {
 
                       {activeTab === "experience" && (
                         <div className="flex flex-col gap-4 text-left">
-                          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Requirements Cross-Reference</h4>
+                          <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Requirements Cross-Reference</h4>
                           {selectedCandidate.analysis_results.experience_matches?.map((match, idx) => (
-                            <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-gray-800/80 flex flex-col gap-2.5">
+                            <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-white/[0.08]/80 flex flex-col gap-2.5">
                               <div className="flex items-start gap-2 text-xs font-semibold text-white">
                                 <CheckCircle2 className="w-4 h-4 text-brand shrink-0 mt-0.5" />
                                 <span>{match.achievement}</span>
                               </div>
-                              <p className="text-[11px] text-gray-400 leading-relaxed pl-6 border-l border-brand/20">
+                              <p className="text-[11px] text-zinc-400 leading-relaxed pl-6 border-l border-brand/20">
                                 <span className="font-semibold text-brand-light">Relevance:</span> {match.relevance}
                               </p>
                             </div>
                           )) || (
-                            <div className="text-center py-6 text-xs text-gray-500 border border-dashed border-gray-800 rounded-xl">
+                            <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
                               No experience matches listed.
                             </div>
                           )}
@@ -883,27 +883,27 @@ export default function RecruiterDashboard() {
 
                       {activeTab === "questions" && (
                         <div className="flex flex-col gap-4 text-left">
-                          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tailored Interview Guide</h4>
+                          <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Tailored Interview Guide</h4>
                           {selectedCandidate.analysis_results.interview_questions?.map((q, idx) => (
-                            <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-gray-800/80 flex flex-col gap-3">
+                            <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-white/[0.08]/80 flex flex-col gap-3">
                               <div className="text-xs font-bold text-white flex gap-1.5">
                                 <span className="text-accent">Q{idx+1}:</span>
                                 <span>{q.question}</span>
                               </div>
                               
                               <div className="pl-5">
-                                <span className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5 font-semibold">Listen for:</span>
+                                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1.5 font-semibold">Listen for:</span>
                                 <div className="flex flex-wrap gap-1.5">
                                   {q.expected_answer_points?.map((pt, pIdx) => (
                                     <span key={pIdx} className="px-2 py-0.5 rounded bg-accent/5 border border-accent/15 text-[10px] text-accent-light">
                                       {pt}
                                     </span>
-                                  )) || <span className="text-xs text-gray-500">General stack comprehension</span>}
+                                  )) || <span className="text-xs text-zinc-500">General stack comprehension</span>}
                                 </div>
                               </div>
                             </div>
                           )) || (
-                            <div className="text-center py-6 text-xs text-gray-500 border border-dashed border-gray-800 rounded-xl">
+                            <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
                               No questions generated.
                             </div>
                           )}
@@ -915,9 +915,9 @@ export default function RecruiterDashboard() {
                 ) : (
                   <div className="glass-card flex-grow flex items-center justify-center text-center p-8 border-dashed">
                     <div>
-                      <HelpCircle className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-                      <h4 className="text-sm font-semibold text-gray-400">No Candidate Selected</h4>
-                      <p className="text-xs text-gray-500 mt-1 max-w-xs">
+                      <HelpCircle className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                      <h4 className="text-sm font-semibold text-zinc-400">No Candidate Selected</h4>
+                      <p className="text-xs text-zinc-500 mt-1 max-w-xs">
                         Select an applicant from the matrix table to view their complete AI match details, gaps analysis, and interview guide.
                       </p>
                     </div>
@@ -926,11 +926,11 @@ export default function RecruiterDashboard() {
               </div>
             </>
           ) : (
-            <div className="flex-grow flex items-center justify-center text-center p-12 border border-dashed border-gray-800 rounded-2xl bg-dark-950/10">
+            <div className="flex-grow flex items-center justify-center text-center p-12 border border-dashed border-white/[0.08] rounded-2xl bg-dark-950/10">
               <div className="max-w-md">
-                <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-4" />
+                <Briefcase className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-white">Create a Job Posting to Begin</h3>
-                <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
                   Post a new job profile detailing your required skill stack and description, then upload candidate PDFs in bulk to compute AI matching scores instantly.
                 </p>
                 <button
@@ -951,7 +951,7 @@ export default function RecruiterDashboard() {
         <div className="fixed bottom-6 right-6 p-4 rounded-xl bg-rose-500/90 text-white font-medium text-xs shadow-2xl flex items-center gap-3 backdrop-blur border border-rose-400/20 max-w-md animate-bounce z-50">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
-          <button onClick={() => setError("")} className="ml-auto hover:text-gray-200">
+          <button onClick={() => setError("")} className="ml-auto hover:text-zinc-200">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -969,7 +969,7 @@ export default function RecruiterDashboard() {
               </h3>
               <button 
                 onClick={() => setShowPostJobModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1075,7 +1075,7 @@ export default function RecruiterDashboard() {
               </h3>
               <button 
                 onClick={() => setShowResumeModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1083,7 +1083,7 @@ export default function RecruiterDashboard() {
 
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto bg-dark-950/40 text-left">
-              <div className="text-xs text-gray-400 bg-white/2 border border-white/5 p-4 rounded-xl font-mono whitespace-pre-wrap leading-relaxed">
+              <div className="text-xs text-zinc-400 bg-white/2 border border-white/5 p-4 rounded-xl font-mono whitespace-pre-wrap leading-relaxed">
                 {selectedCandidate.resume_text || "No resume text was extracted."}
               </div>
             </div>
@@ -1115,7 +1115,7 @@ export default function RecruiterDashboard() {
               </h3>
               <button
                 onClick={() => { setShowJobDetailsModal(false); setJobDetailsTarget(null); }}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-zinc-400 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1131,11 +1131,11 @@ export default function RecruiterDashboard() {
                   <p className="text-sm text-brand-light font-medium mt-1">{jobDetailsTarget.company_name}</p>
                 )}
                 <div className="flex items-center gap-4 mt-2">
-                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-xs text-zinc-400 flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-brand" />
                     {jobDetailsTarget.location || "Remote"}
                   </span>
-                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-xs text-zinc-400 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-brand" />
                     Posted {new Date(jobDetailsTarget.created_at).toLocaleDateString()}
                   </span>
@@ -1145,7 +1145,7 @@ export default function RecruiterDashboard() {
               {/* Required Skills */}
               {jobDetailsTarget.requirements && (
                 <div>
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Required Skills</h4>
+                  <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Required Skills</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {jobDetailsTarget.requirements.split(',').map((req, idx) => (
                       <span
@@ -1161,8 +1161,8 @@ export default function RecruiterDashboard() {
 
               {/* Job Description */}
               <div>
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Job Description</h4>
-                <div className="p-4 rounded-xl bg-dark-950/40 border border-gray-800 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
+                <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Job Description</h4>
+                <div className="p-4 rounded-xl bg-dark-950/40 border border-white/[0.08] text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap font-sans">
                   {jobDetailsTarget.description || "No description provided."}
                 </div>
               </div>
@@ -1186,7 +1186,7 @@ export default function RecruiterDashboard() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-4 bg-dark-950/20">
-        <div className="max-w-[1536px] mx-auto px-6 flex items-center justify-between text-gray-600 text-xs">
+        <div className="max-w-[1536px] mx-auto px-6 flex items-center justify-between text-zinc-600 text-xs">
           <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>

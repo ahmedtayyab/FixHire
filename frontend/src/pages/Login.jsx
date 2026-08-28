@@ -21,11 +21,11 @@ const ROLES = [
     icon: User,
     label: "Candidate",
     description: "Discover opportunities & optimize your resume",
-    gradient: "from-cyan-500 to-accent",
-    glow: "shadow-cyan-500/20",
-    border: "border-cyan-500/40",
-    bg: "bg-cyan-500/10",
-    activeBg: "bg-cyan-500/20",
+    gradient: "from-indigo-400 to-violet-500",
+    glow: "shadow-indigo-500/20",
+    border: "border-indigo-500/40",
+    bg: "bg-indigo-500/10",
+    activeBg: "bg-indigo-500/20",
   },
 ];
 
@@ -129,10 +129,10 @@ export default function Login() {
 
   if (authLoading || isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+      <div className="ambient-canvas flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-10 h-10 animate-spin text-brand mx-auto mb-4" />
-          <p className="text-gray-400 text-sm">
+          <p className="text-zinc-400 text-sm">
             {isAuthenticated ? "Taking you to your dashboard..." : "Checking your session..."}
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/20">
+            <div className="logo-mark">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight text-white">FixHire</span>
@@ -159,14 +159,14 @@ export default function Login() {
           {step === 1 ? (
             <>
               <h2 className="text-3xl font-bold tracking-tight text-white">Welcome Back</h2>
-              <p className="text-gray-400 mt-2 text-sm font-light">
+              <p className="text-zinc-400 mt-2 text-sm font-light">
                 Choose how you'd like to sign in
               </p>
             </>
           ) : (
             <>
               <h2 className="text-3xl font-bold tracking-tight text-white">Sign In</h2>
-              <p className="text-gray-400 mt-2 text-sm font-light">
+              <p className="text-zinc-400 mt-2 text-sm font-light">
                 Continuing as a{" "}
                 <span
                   className={`font-semibold bg-gradient-to-r ${roleConfig?.gradient} bg-clip-text text-transparent`}
@@ -201,7 +201,7 @@ export default function Login() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-white font-semibold text-base">{role.label}</p>
-                    <p className="text-gray-400 text-sm mt-0.5 leading-snug">{role.description}</p>
+                    <p className="text-zinc-400 text-sm mt-0.5 leading-snug">{role.description}</p>
                   </div>
                   <div
                     className={`w-6 h-6 rounded-full border-2 border-white/20 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:${role.gradient} transition-all duration-300 shrink-0`}
@@ -210,7 +210,7 @@ export default function Login() {
               );
             })}
 
-            <div className="pt-4 text-center text-sm text-gray-400">
+            <div className="pt-4 text-center text-sm text-zinc-400">
               Don't have an account?{" "}
               <Link to="/register" className="text-brand hover:text-brand-light font-medium transition-colors">
                 Create one
@@ -226,7 +226,7 @@ export default function Login() {
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={handleBack}
-                className="flex items-center space-x-1.5 text-gray-400 hover:text-white text-sm transition-colors group"
+                className="flex items-center space-x-1.5 text-zinc-400 hover:text-white text-sm transition-colors group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
                 <span>Change role</span>
@@ -266,7 +266,7 @@ export default function Login() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 block mb-2">Password</label>
+                <label className="text-sm font-medium text-zinc-400 block mb-2">Password</label>
                 <input
                   id="login-password"
                   type="password"
@@ -300,13 +300,13 @@ export default function Login() {
               type="button"
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="mt-4 w-full py-3 rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-3"
+              className="btn-secondary w-full py-3 flex items-center justify-center gap-3"
             >
               <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
               <span>Sign in with Google</span>
             </button>
 
-            <div className="mt-8 pt-6 border-t border-white/5 text-center text-sm text-gray-400">
+            <div className="mt-8 pt-6 border-t border-white/5 text-center text-sm text-zinc-400">
               Don't have an account?{" "}
               <Link to="/register" className="text-brand hover:text-brand-light font-medium transition-colors">
                 Create an account

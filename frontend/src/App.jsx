@@ -21,14 +21,14 @@ function ProtectedRoute({ children, allowedRole }) {
   // never bounce recruiters/candidates back to the role-selection login screen.
   if (loading || (hasToken && !isAuthenticated)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+      <div className="ambient-canvas flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-10 h-10 animate-spin text-brand mx-auto mb-4" />
-          <p className="text-gray-400 text-sm">
+          <Loader2 className="w-10 h-10 animate-spin text-indigo-400 mx-auto mb-4" />
+          <p className="text-zinc-400 text-sm">
             {hasToken ? "Restoring your session..." : "Verifying session..."}
           </p>
           {hasToken && (
-            <p className="text-gray-600 text-xs mt-2">
+            <p className="text-zinc-600 text-xs mt-2">
               The server may be waking up — this can take up to a minute.
             </p>
           )}
