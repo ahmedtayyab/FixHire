@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Sparkles, FileText, Briefcase, Zap, User, LogOut } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, Briefcase, User, LogOut } from "lucide-react";
 import { GITHUB_URL, LINKEDIN_URL } from "../config.js";
 import { useAuth } from "../context/AuthContext";
 
@@ -108,28 +108,24 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between overflow-hidden">
-      
-      {/* Decorative Glow Elements */}
-      <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-brand/10 blur-[100px] pointer-events-none landing-glow-a" />
-      <div className="absolute bottom-[20%] right-[5%] w-[500px] h-[500px] rounded-full bg-accent/5 blur-[120px] pointer-events-none landing-glow-b" />
+    <div className="landing-page flex flex-col justify-between overflow-hidden">
 
       {/* Header / Navbar */}
-      <header className="sticky top-0 z-50 border-b border-white/5 bg-dark-950/70 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <header className="landing-nav relative z-10">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/20">
+            <div className="logo-mark">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+            <span className="text-lg font-semibold tracking-[-0.02em] text-white">
               FixHire
             </span>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#candidates" className="hover:text-white transition-colors">For Candidates</a>
-            <a href="#recruiters" className="hover:text-white transition-colors">For Recruiters</a>
+          <nav className="hidden md:flex items-center space-x-8">
+            <a href="#features" className="text-xs font-medium uppercase tracking-wider text-zinc-400 hover:text-zinc-200 transition-colors">Features</a>
+            <a href="#candidates" className="text-xs font-medium uppercase tracking-wider text-zinc-400 hover:text-zinc-200 transition-colors">For Candidates</a>
+            <a href="#recruiters" className="text-xs font-medium uppercase tracking-wider text-zinc-400 hover:text-zinc-200 transition-colors">For Recruiters</a>
           </nav>
 
           <div className="flex items-center space-x-4">
@@ -138,7 +134,7 @@ export default function LandingPage() {
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
                 aria-label="GitHub profile"
                 title="GitHub"
               >
@@ -148,7 +144,7 @@ export default function LandingPage() {
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
                 aria-label="LinkedIn profile"
                 title="LinkedIn"
               >
@@ -158,16 +154,16 @@ export default function LandingPage() {
 
             {isAuthenticated ? (
               <>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-300">
+                <div className="avatar-chip">
                   <User className="w-4 h-4 text-brand-light" />
                   <span className="font-medium">{user?.full_name}</span>
                 </div>
-                <Link to={dashboardPath} className="btn-primary py-2 px-4 text-sm rounded-lg shadow-none">
+                <Link to={dashboardPath} className="btn-hero-primary py-2 px-4">
                   Go to Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="p-2.5 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
+                  className="btn-ghost p-2.5 rounded-lg border border-white/[0.08]"
                   title="Log Out"
                 >
                   <LogOut className="w-4 h-4" />
@@ -175,10 +171,10 @@ export default function LandingPage() {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                <Link to="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                   Sign In
                 </Link>
-                <Link to="/register" className="btn-primary py-2 px-4 text-sm rounded-lg shadow-none">
+                <Link to="/register" className="btn-hero-primary py-2 px-4">
                   Get Started
                 </Link>
               </>
@@ -188,40 +184,39 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <main className="flex-grow">
-        <section className="relative pt-20 pb-24 md:pt-32 md:pb-36 max-w-7xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-brand-glow border border-brand/20 text-brand-light text-xs font-semibold uppercase tracking-wider mb-8 animate-pulse-slow">
-            <Zap className="w-3.5 h-3.5" />
+      <main className="flex-grow relative z-10">
+        <section className="relative pt-16 pb-24 md:pt-28 md:pb-32 max-w-6xl mx-auto px-6 text-center">
+          <div className="landing-micro-pill mb-6">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-50" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
             <span>Next-Gen Recruitment with AI Matching</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-8">
-            <span className="bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-              Optimize Resumes.
-            </span>
+          <h1 className="landing-hero-title">
+            Optimize Resumes.
             <br />
-            <span className="bg-gradient-to-r from-brand-light via-brand to-accent bg-clip-text text-transparent">
-              Shortlist Top Candidates.
-            </span>
+            Shortlist Top Candidates.
           </h1>
 
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-12 font-light leading-relaxed">
+          <p className="max-w-xl mx-auto text-base md:text-lg text-zinc-400 font-normal leading-relaxed mb-10">
             FixHire is the dual-sided hiring platform helping applicants build standard ATS-compliant CVs and empowering recruiters to rank and filter candidates in minutes with AI-assisted insights.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
             {isAuthenticated ? (
-              <Link to={dashboardPath} className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
+              <Link to={dashboardPath} className="btn-hero-primary w-full sm:w-auto">
                 <span>Go to Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             ) : (
-              <Link to="/register" className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
+              <Link to="/register" className="btn-hero-primary w-full sm:w-auto">
                 <span>Start Free Trial</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             )}
-            <a href="#features" className="btn-secondary w-full sm:w-auto">
+            <a href="#features" className="btn-hero-secondary w-full sm:w-auto">
               Explore Features
             </a>
           </div>
@@ -229,7 +224,7 @@ export default function LandingPage() {
           {/* Glowing Platform Preview Card — scroll-linked zoom depth */}
           <div
             ref={videoFrameRef}
-            className="mt-20 relative rounded-2xl border border-white/5 bg-dark-900/40 p-4 shadow-2xl will-change-transform"
+            className="mt-16 relative glass-card p-3 shadow-2xl will-change-transform border-zinc-800/80"
             style={{
               transform: videoStyle.transform,
               opacity: videoStyle.opacity,
@@ -237,8 +232,7 @@ export default function LandingPage() {
               transition: "transform 80ms linear, opacity 80ms linear",
             }}
           >
-            <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-3xl -z-10" />
-            <div className="rounded-xl border border-white/5 bg-dark-950/80 overflow-hidden aspect-[16/9] flex items-center justify-center relative group">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950/90 overflow-hidden aspect-[16/9] flex items-center justify-center relative group">
               <video
                 src="/ai_matching_preview.mp4"
                 className="w-full h-full object-cover scale-[1.02]"
@@ -247,17 +241,17 @@ export default function LandingPage() {
                 muted
                 playsInline
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-950/80 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>
         </section>
 
         {/* Portals Comparison Section */}
-        <section id="features" className="py-24 bg-dark-900/20 border-y border-white/5">
-          <div className="max-w-7xl mx-auto px-6">
+        <section id="features" className="py-24 border-y border-white/[0.06] relative z-10">
+          <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16" data-scroll-zoom>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Tailored Experience for Both Sides</h2>
-              <p className="text-gray-400 max-w-xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-semibold tracking-[-0.03em] mb-4 text-zinc-50">Tailored Experience for Both Sides</h2>
+              <p className="text-zinc-400 max-w-xl mx-auto">
                 Whether you're looking for your next dream role or hiring the perfect candidate, FixHire has you covered.
               </p>
             </div>
@@ -267,17 +261,17 @@ export default function LandingPage() {
               <div
                 id="candidates"
                 data-scroll-zoom
-                className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-brand/20 transition-all duration-300"
+                className="glass-card glass-card-hover p-8 md:p-10 flex flex-col justify-between"
               >
                 <div>
                   <div className="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand mb-6">
                     <FileText className="w-6 h-6" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-white">For Candidates</h3>
-                  <p className="text-gray-400 mb-6 font-light leading-relaxed">
+                  <p className="text-zinc-400 mb-6 font-light leading-relaxed">
                     Stop submitting resumes to a black hole. Parse your PDF, measure your compliance score against any job description, receive missing skill tips, and generate interview questions tailored for you.
                   </p>
-                  <ul className="space-y-3 mb-8 text-sm text-gray-300">
+                  <ul className="space-y-3 mb-8 text-sm text-zinc-300">
                     <li className="flex items-center space-x-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand" />
                       <span>Instant ATS Compatibility Score</span>
@@ -301,7 +295,7 @@ export default function LandingPage() {
               <div
                 id="recruiters"
                 data-scroll-zoom
-                className="glass-card p-8 md:p-10 flex flex-col justify-between hover:border-accent/20 transition-all duration-300"
+                className="glass-card glass-card-hover p-8 md:p-10 flex flex-col justify-between"
                 style={{ transitionDelay: "80ms" }}
               >
                 <div>
@@ -309,10 +303,10 @@ export default function LandingPage() {
                     <Briefcase className="w-6 h-6" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-white">For Recruiters</h3>
-                  <p className="text-gray-400 mb-6 font-light leading-relaxed">
+                  <p className="text-zinc-400 mb-6 font-light leading-relaxed">
                     Skip manually scanning hundreds of resumes. Create job postings, upload applications in bulk, get precise candidate rankings based on compatibility, and view AI-assisted side-by-side matches.
                   </p>
-                  <ul className="space-y-3 mb-8 text-sm text-gray-300">
+                  <ul className="space-y-3 mb-8 text-sm text-zinc-300">
                     <li className="flex items-center space-x-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                       <span>Fast Multilingual PDF Parsing</span>
@@ -336,47 +330,47 @@ export default function LandingPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-24 max-w-7xl mx-auto px-6" data-scroll-zoom>
+        <section className="py-24 max-w-6xl mx-auto px-6 relative z-10" data-scroll-zoom>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">95%</div>
-              <div className="text-gray-400 text-sm">ATS Compatibility Rate</div>
+              <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">95%</div>
+              <div className="text-zinc-500 text-sm">ATS Compatibility Rate</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-extrabold text-brand-light mb-2">10x</div>
-              <div className="text-gray-400 text-sm">Faster Screening Speed</div>
+              <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">10x</div>
+              <div className="text-zinc-500 text-sm">Faster Screening Speed</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-extrabold text-accent mb-2">&lt;3s</div>
-              <div className="text-gray-400 text-sm">AI Response Speed</div>
+              <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">&lt;3s</div>
+              <div className="text-zinc-500 text-sm">AI Response Speed</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">100%</div>
-              <div className="text-gray-400 text-sm">Data Privacy & Security</div>
+              <div className="text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-zinc-50 mb-2">100%</div>
+              <div className="text-zinc-500 text-sm">Data Privacy & Security</div>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8 bg-dark-950">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col gap-6">
-          <div className="flex flex-col md:flex-row items-center justify-between text-gray-500 text-sm">
+      <footer className="border-t border-white/[0.06] py-8 bg-zinc-950 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between text-zinc-500 text-sm">
             <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
-            <div className="flex items-center gap-2 mt-4 md:mt-0 text-gray-400">
+            <div className="flex items-center gap-2 mt-4 md:mt-0 text-zinc-400">
               <span>Built by</span>
-              <span className="text-gray-300 font-medium">Ahmad Tayyab</span>
+              <span className="text-zinc-300 font-medium">Ahmad Tayyab</span>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 border-t border-white/5">
-            <p className="text-xs text-gray-500 uppercase tracking-wider">Connect with me</p>
+            <p className="text-xs text-zinc-500 uppercase tracking-wider">Connect with me</p>
             <div className="flex items-center gap-3">
               <a
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:border-brand/30 hover:bg-brand/10 transition-all text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-zinc-300 hover:text-white hover:border-brand/30 hover:bg-brand/10 transition-all text-sm font-medium"
                 aria-label="GitHub profile"
               >
                 <GitHubIcon className="w-4 h-4" />
@@ -386,7 +380,7 @@ export default function LandingPage() {
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:text-white hover:border-accent/30 hover:bg-accent/10 transition-all text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-zinc-300 hover:text-white hover:border-accent/30 hover:bg-accent/10 transition-all text-sm font-medium"
                 aria-label="LinkedIn profile"
               >
                 <LinkedInIcon className="w-4 h-4" />

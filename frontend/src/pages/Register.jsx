@@ -49,7 +49,7 @@ export default function Register() {
       <div className="w-full max-w-lg z-10">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/20">
+            <div className="logo-mark">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight text-white">
@@ -57,7 +57,7 @@ export default function Register() {
             </span>
           </Link>
           <h2 className="text-3xl font-bold tracking-tight text-white">Get Started</h2>
-          <p className="text-gray-400 mt-2 text-sm font-light">
+          <p className="text-zinc-400 mt-2 text-sm font-light">
             Create an account to unlock candidate tools or recruiter dashboards.
           </p>
         </div>
@@ -119,14 +119,14 @@ export default function Register() {
                   onClick={() => setRole("candidate")}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all duration-300 ${
                     role === "candidate"
-                      ? "border-brand bg-brand-glow text-white"
-                      : "border-gray-800 bg-dark-900/40 text-gray-400 hover:border-gray-700"
+                      ? "border-indigo-500/40 bg-indigo-500/10 text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                      : "border-white/[0.08] bg-zinc-900/40 text-zinc-400 hover:border-white/[0.12] hover:bg-white/[0.03]"
                   }`}
                   disabled={loading}
                 >
                   <User className="w-6 h-6 mb-2" />
                   <span className="font-semibold text-sm">Candidate</span>
-                  <span className="text-xs text-gray-500 mt-1">Optimize resume</span>
+                  <span className="text-xs text-zinc-500 mt-1">Optimize resume</span>
                 </button>
 
                 {/* Recruiter Option */}
@@ -135,14 +135,14 @@ export default function Register() {
                   onClick={() => setRole("recruiter")}
                   className={`flex flex-col items-center justify-center p-4 rounded-xl border text-center transition-all duration-300 ${
                     role === "recruiter"
-                      ? "border-brand bg-brand-glow text-white"
-                      : "border-gray-800 bg-dark-900/40 text-gray-400 hover:border-gray-700"
+                      ? "border-indigo-500/40 bg-indigo-500/10 text-zinc-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]"
+                      : "border-white/[0.08] bg-zinc-900/40 text-zinc-400 hover:border-white/[0.12] hover:bg-white/[0.03]"
                   }`}
                   disabled={loading}
                 >
                   <Briefcase className="w-6 h-6 mb-2" />
                   <span className="font-semibold text-sm">Recruiter</span>
-                  <span className="text-xs text-gray-500 mt-1">Evaluate resumes</span>
+                  <span className="text-xs text-zinc-500 mt-1">Evaluate resumes</span>
                 </button>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function Register() {
               type="button"
               onClick={handleGoogleSignup}
               disabled={loading}
-              className="w-full py-3 flex items-center justify-center space-x-3 rounded-2xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors"
+              className="btn-secondary w-full py-3 flex items-center justify-center space-x-3"
             >
               <span className="w-5 h-5 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 text-[10px] font-semibold">
                 G
@@ -159,8 +159,8 @@ export default function Register() {
               <span>Sign up with Google</span>
             </button>
 
-            <div className="relative my-6 text-center text-sm text-gray-400">
-              <span className="bg-slate-950 px-3">or</span>
+            <div className="relative my-6 text-center text-sm text-zinc-400">
+              <span className="bg-zinc-950 px-3 relative z-10">or</span>
               <div className="absolute inset-x-0 top-1/2 border-t border-white/10" />
             </div>
 
@@ -180,7 +180,7 @@ export default function Register() {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/5 text-center text-sm text-gray-400">
+          <div className="mt-8 pt-6 border-t border-white/5 text-center text-sm text-zinc-400">
             Already have an account?{" "}
             <Link to="/login" className="text-brand hover:text-brand-light font-medium transition-colors">
               Sign In

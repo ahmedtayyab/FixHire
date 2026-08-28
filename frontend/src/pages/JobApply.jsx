@@ -155,10 +155,10 @@ export default function JobApply() {
 
   if (loadingJob) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-950 text-gray-100">
+      <div className="ambient-canvas flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-brand mx-auto mb-4" />
-          <p className="text-gray-400 text-sm font-medium">Fetching job details...</p>
+          <p className="text-zinc-400 text-sm font-medium">Fetching job details...</p>
         </div>
       </div>
     );
@@ -166,11 +166,11 @@ export default function JobApply() {
 
   if (error && !job) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dark-950 text-gray-100 px-6">
+      <div className="ambient-canvas flex items-center justify-center px-6">
         <div className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 shadow-rose-950/10">
           <AlertTriangle className="w-12 h-12 text-rose-400 mx-auto mb-4" />
           <h2 className="text-lg font-bold text-white">Oops! Job Details Unavailable</h2>
-          <p className="text-sm text-gray-400 mt-2 leading-relaxed">{error}</p>
+          <p className="text-sm text-zinc-400 mt-2 leading-relaxed">{error}</p>
           <Link
             to="/"
             className="btn-primary mt-6 inline-flex items-center gap-2 text-xs px-4 py-2"
@@ -183,19 +183,19 @@ export default function JobApply() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-950 text-gray-100 flex flex-col justify-between selection:bg-brand selection:text-white">
+    <div className="min-h-screen text-zinc-100 flex flex-col justify-between selection:bg-indigo-500/30 selection:text-white">
       {/* Top Header navbar */}
-      <header className="border-b border-white/5 bg-dark-900/60 backdrop-blur-md sticky top-0 z-30">
+      <header className="nav-glass z-30">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/10 transition-transform group-hover:scale-105">
+            <div className="logo-mark transition-transform group-hover:scale-105">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+            <span className="text-2xl font-extrabold tracking-tight text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-300">
               FixHire
             </span>
           </Link>
-          <div className="text-xs text-gray-500 font-semibold tracking-wider uppercase">
+          <div className="text-xs text-zinc-500 font-semibold tracking-wider uppercase">
             Public Job Application Portal
           </div>
         </div>
@@ -217,12 +217,12 @@ export default function JobApply() {
                   <h1 className="text-2xl font-extrabold text-white mt-2">
                     Thank you, {screeningResult.candidate_name}!
                   </h1>
-                  <p className="text-sm text-gray-400 mt-1 leading-relaxed">
-                    Your resume has been successfully submitted and screened for the <strong className="text-gray-200">{job.title}</strong> position.
+                  <p className="text-sm text-zinc-400 mt-1 leading-relaxed">
+                    Your resume has been successfully submitted and screened for the <strong className="text-zinc-200">{job.title}</strong> position.
                   </p>
                 </div>
                 
-                <div className="flex items-center gap-4 bg-dark-900/60 p-4 rounded-xl border border-gray-800 self-start md:self-auto">
+                <div className="flex items-center gap-4 bg-dark-900/60 p-4 rounded-xl border border-white/[0.08] self-start md:self-auto">
                   <div className="relative w-14 h-14 flex items-center justify-center">
                     <svg className="w-full h-full transform -rotate-90">
                       <circle cx="28" cy="28" r="23" className="stroke-dark-800 fill-none" strokeWidth="4" />
@@ -240,7 +240,7 @@ export default function JobApply() {
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-gray-500 uppercase font-semibold">AI Match Score</span>
+                    <span className="text-[10px] text-zinc-500 uppercase font-semibold">AI Match Score</span>
                     <div className="mt-0.5">
                       <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${getRecommendationBadgeColor(screeningResult.analysis_results?.decision_recommendation)}`}>
                         {screeningResult.analysis_results?.decision_recommendation || "Processed"}
@@ -255,8 +255,8 @@ export default function JobApply() {
               {/* Left Side: Summary & Strengths */}
               <div className="flex flex-col gap-6">
                 <div>
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">AI Fit Evaluation</h3>
-                  <p className="text-sm text-gray-300 leading-relaxed bg-white/2 border border-white/5 p-4 rounded-xl">
+                  <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">AI Fit Evaluation</h3>
+                  <p className="text-sm text-zinc-300 leading-relaxed bg-white/2 border border-white/5 p-4 rounded-xl">
                     {screeningResult.analysis_results?.fit_summary || 
                       `Analysis complete. The resume demonstrates compatibility with the job profile. The recruiter will review your application soon.`}
                   </p>
@@ -268,11 +268,11 @@ export default function JobApply() {
                   </h3>
                   <ul className="space-y-2">
                     {screeningResult.analysis_results?.strengths?.map((str, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-xs text-gray-300 leading-relaxed">
+                      <li key={idx} className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-xs text-zinc-300 leading-relaxed">
                         <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{str}</span>
                       </li>
-                    )) || <li className="text-xs text-gray-500">Recruiter will contact you with evaluation feedback.</li>}
+                    )) || <li className="text-xs text-zinc-500">Recruiter will contact you with evaluation feedback.</li>}
                   </ul>
                 </div>
               </div>
@@ -280,22 +280,22 @@ export default function JobApply() {
               {/* Right Side: Next Steps & Summary */}
               <div className="flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/5 md:pl-8 pt-6 md:pt-0">
                 <div className="flex flex-col gap-4">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">What happens next?</h3>
+                  <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">What happens next?</h3>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xs font-bold shrink-0 mt-0.5">1</div>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-zinc-400 leading-relaxed">
                       Our AI resume screening process has logged your credentials and analyzed your experience against the job profile.
                     </p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xs font-bold shrink-0 mt-0.5">2</div>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-zinc-400 leading-relaxed">
                       The job poster has been notified. They can inspect your application details, read your resume directly, and check the AI recommendation matrix.
                     </p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xs font-bold shrink-0 mt-0.5">3</div>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-zinc-400 leading-relaxed">
                       If there's a match, the recruiting manager will reach out via the email address you provided: <strong className="text-white">{email}</strong>.
                     </p>
                   </div>
@@ -321,14 +321,14 @@ export default function JobApply() {
               <div className="glass-card p-8 border-brand/10 shadow-brand/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full filter blur-xl"></div>
                 
-                <h1 className="text-3xl font-extrabold text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+                <h1 className="text-3xl font-extrabold text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-300">
                   {job.title}
                 </h1>
                 {job.company_name && (
                   <p className="text-base font-semibold text-brand-light mt-1">{job.company_name}</p>
                 )}
                 
-                <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-400 border-b border-white/5 pb-5">
+                <div className="flex flex-wrap gap-4 mt-3 text-xs text-zinc-400 border-b border-white/5 pb-5">
                   <span className="flex items-center gap-1">
                     <MapPin className="w-4 h-4 text-brand" /> {job.location || "Remote"}
                   </span>
@@ -339,7 +339,7 @@ export default function JobApply() {
 
                 {job.requirements && (
                   <div className="mt-6">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Desired Skills & Stack</h3>
+                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Desired Skills & Stack</h3>
                     <div className="flex flex-wrap gap-1.5">
                       {job.requirements.split(',').map((req, idx) => (
                         <span key={idx} className="px-3 py-1 rounded bg-brand/5 border border-brand/20 text-xs text-brand-light font-medium">
@@ -351,16 +351,16 @@ export default function JobApply() {
                 )}
 
                 <div className="mt-6">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Job Description</h3>
-                  <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
+                  <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Job Description</h3>
+                  <div className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap font-sans">
                     {job.description}
                   </div>
                 </div>
               </div>
 
               {/* Security notice */}
-              <div className="p-4 rounded-xl bg-white/2 border border-white/5 text-[11px] text-gray-500 leading-relaxed">
-                <span className="font-bold text-gray-400 block mb-1">Security & Privacy Note</span>
+              <div className="p-4 rounded-xl bg-white/2 border border-white/5 text-[11px] text-zinc-500 leading-relaxed">
+                <span className="font-bold text-zinc-400 block mb-1">Security & Privacy Note</span>
                 Your uploaded resume document is scanned locally and screened on-demand through our secure matching process. We do not sell applicant details or distribute your personal documents to unauthorized training sets.
               </div>
             </div>
@@ -371,7 +371,7 @@ export default function JobApply() {
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Sparkles className="w-4.5 h-4.5 text-accent animate-pulse" /> Apply for this position
                 </h2>
-                <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
                   Submit your details and PDF resume. Our matching system will cross-reference your skills and experience to highlight matches instantly.
                 </p>
 
@@ -386,7 +386,7 @@ export default function JobApply() {
                   <div>
                     <label className="form-label text-xs font-bold uppercase tracking-wider">Full Name *</label>
                     <div className="relative mt-1">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
                         <User className="w-4 h-4" />
                       </div>
                       <input
@@ -404,7 +404,7 @@ export default function JobApply() {
                   <div>
                     <label className="form-label text-xs font-bold uppercase tracking-wider">Email Address *</label>
                     <div className="relative mt-1">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
                         <Mail className="w-4 h-4" />
                       </div>
                       <input
@@ -432,7 +432,7 @@ export default function JobApply() {
                           ? "border-brand bg-brand/5" 
                           : file 
                             ? "border-emerald-500/40 bg-emerald-500/2" 
-                            : "border-gray-800 hover:border-brand/40 hover:bg-dark-900/20"
+                            : "border-white/[0.08] hover:border-brand/40 hover:bg-dark-900/20"
                       } ${submitting ? "opacity-50 pointer-events-none" : ""}`}
                     >
                       <input
@@ -449,13 +449,13 @@ export default function JobApply() {
                             <FileText className="w-5 h-5" />
                           </div>
                           <p className="text-xs font-semibold text-white max-w-[200px] truncate">{file.name}</p>
-                          <p className="text-[10px] text-gray-500 mt-1">{(file.size / 1024).toFixed(1)} KB • Click to swap file</p>
+                          <p className="text-[10px] text-zinc-500 mt-1">{(file.size / 1024).toFixed(1)} KB • Click to swap file</p>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
-                          <UploadCloud className="w-8 h-8 text-gray-500 mb-2" />
+                          <UploadCloud className="w-8 h-8 text-zinc-500 mb-2" />
                           <p className="text-xs font-semibold text-white">Drag & drop resume PDF here</p>
-                          <p className="text-[10px] text-gray-500 mt-1">or click to browse files (Only PDF supported)</p>
+                          <p className="text-[10px] text-zinc-500 mt-1">or click to browse files (Only PDF supported)</p>
                         </div>
                       )}
                     </div>
@@ -489,7 +489,7 @@ export default function JobApply() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-6 bg-dark-950/20">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-600 text-xs">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-600 text-xs">
           <p>&copy; {new Date().getFullYear()} FixHire. All rights reserved.</p>
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>

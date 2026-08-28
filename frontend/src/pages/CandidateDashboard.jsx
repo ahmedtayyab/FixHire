@@ -173,13 +173,13 @@ export default function CandidateDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-dark-950">
+    <div className="min-h-screen flex flex-col justify-between">
       
       {/* Top Navbar */}
-      <header className="border-b border-white/5 bg-dark-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="nav-glass z-40">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand to-accent flex items-center justify-center">
+            <div className="logo-mark">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-extrabold tracking-tight text-white">
@@ -191,13 +191,13 @@ export default function CandidateDashboard() {
           </span>
 
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3 px-3 py-1.5 rounded-xl bg-dark-800/40 border border-gray-800">
+            <div className="avatar-chip">
               <User className="w-4 h-4 text-brand-light" />
-              <span className="text-sm font-medium text-gray-300">{user?.full_name}</span>
+              <span className="text-sm font-medium text-zinc-300">{user?.full_name}</span>
             </div>
             <button
               onClick={logout}
-              className="p-2.5 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
+              className="btn-ghost p-2.5 rounded-lg border border-white/[0.08]"
               title="Log Out"
             >
               <LogOut className="w-4 h-4" />
@@ -230,7 +230,7 @@ export default function CandidateDashboard() {
                 <Brain className="w-8 h-8 text-brand absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Analyzing Resume</h3>
-              <p className="text-gray-400 max-w-md text-sm mb-4">
+              <p className="text-zinc-400 max-w-md text-sm mb-4">
                 Our AI matching engine is processing your PDF and running calculations against the target job.
               </p>
               <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/5 text-xs text-brand-light font-mono animate-pulse">
@@ -242,11 +242,11 @@ export default function CandidateDashboard() {
             <div className="space-y-8 animate-fadeIn">
               
               {/* Results Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/[0.08]">
                 <div className="flex items-center space-x-4">
                   <button 
                     onClick={() => setSelectedAnalysis(null)}
-                    className="p-2 rounded-xl border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
+                    className="p-2 rounded-xl border border-white/[0.08] text-zinc-400 hover:text-white hover:bg-dark-800 transition-all duration-200"
                     title="Back to Upload"
                   >
                     <ArrowLeft className="w-5 h-5" />
@@ -254,7 +254,7 @@ export default function CandidateDashboard() {
                   <div>
                     <span className="text-xs font-semibold uppercase tracking-wider text-brand-light">Optimization Report</span>
                     <h2 className="text-2xl font-extrabold text-white mt-0.5">{selectedAnalysis.job_title}</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-zinc-500 mt-0.5">
                       Analyzed on {formatDate(selectedAnalysis.created_at)} &bull; {selectedAnalysis.resume_filename}
                     </p>
                   </div>
@@ -283,7 +283,7 @@ export default function CandidateDashboard() {
                 
                 {/* Compatibility Score Circle */}
                 <div className="glass-card p-6 flex flex-col items-center justify-center text-center">
-                  <span className="text-sm font-semibold text-gray-400 mb-4">ATS Compatibility</span>
+                  <span className="text-sm font-semibold text-zinc-400 mb-4">ATS Compatibility</span>
                   <div className="relative w-36 h-36 flex items-center justify-center">
                     {/* SVG Circular Progress Bar */}
                     <svg className="w-full h-full transform -rotate-90">
@@ -324,32 +324,32 @@ export default function CandidateDashboard() {
                         <Sparkles className="w-4 h-4 text-brand mr-2" />
                         Why this score?
                       </h3>
-                      <span className="text-xs uppercase tracking-wider text-gray-500">Insights</span>
+                      <span className="text-xs uppercase tracking-wider text-zinc-500">Insights</span>
                     </div>
-                    <p className="text-sm text-gray-400 leading-relaxed mb-5">
+                    <p className="text-sm text-zinc-400 leading-relaxed mb-5">
                       Your score is based on how closely your resume content aligns with the job, which keywords are missing, and how strong the experience descriptions are.
                     </p>
                     <div className="grid gap-3">
                       <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
-                        <div className="flex items-center justify-between text-sm text-gray-300">
+                        <div className="flex items-center justify-between text-sm text-zinc-300">
                           <span>Missing keywords</span>
                           <span className="font-semibold text-white">{selectedAnalysis.analysis_results?.missing_skills?.length ?? 0}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">More missing keywords can reduce your match score.</p>
+                        <p className="text-xs text-zinc-500 mt-2">More missing keywords can reduce your match score.</p>
                       </div>
                       <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
-                        <div className="flex items-center justify-between text-sm text-gray-300">
+                        <div className="flex items-center justify-between text-sm text-zinc-300">
                           <span>Improvement suggestions</span>
                           <span className="font-semibold text-white">{selectedAnalysis.analysis_results?.improvement_suggestions?.length ?? 0}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">These tips show where resume phrasing can be stronger.</p>
+                        <p className="text-xs text-zinc-500 mt-2">These tips show where resume phrasing can be stronger.</p>
                       </div>
                       <div className="p-3 rounded-xl bg-dark-900 border border-white/5">
-                        <div className="flex items-center justify-between text-sm text-gray-300">
+                        <div className="flex items-center justify-between text-sm text-zinc-300">
                           <span>Resume relevance</span>
                           <span className="font-semibold text-white">{selectedAnalysis.compatibility_score >= 80 ? 'High' : selectedAnalysis.compatibility_score >= 50 ? 'Medium' : 'Low'}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">This reflects how well your profile fits the job requirements.</p>
+                        <p className="text-xs text-zinc-500 mt-2">This reflects how well your profile fits the job requirements.</p>
                       </div>
                     </div>
                   </div>
@@ -362,14 +362,14 @@ export default function CandidateDashboard() {
                       <Sparkle className="w-4 h-4 text-brand mr-2" />
                       Recruiter Synopsis
                     </h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-zinc-300 text-sm leading-relaxed">
                       {selectedAnalysis.analysis_results?.recruiter_summary || "No summary generated."}
                     </p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-white/5 flex justify-end">
                     <button
                       onClick={() => handleCopy(selectedAnalysis.analysis_results?.recruiter_summary, "summary")}
-                      className="text-xs text-gray-400 hover:text-white flex items-center space-x-1"
+                      className="text-xs text-zinc-400 hover:text-white flex items-center space-x-1"
                     >
                       {copiedField === "summary" ? (
                         <>
@@ -397,7 +397,7 @@ export default function CandidateDashboard() {
                     <AlertTriangle className="w-4.5 h-4.5 text-amber-400 mr-2" />
                     Missing Keywords & Skills
                   </h3>
-                  <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
                     ATS scanners prioritize keyword density. Adding these terms to your experience descriptions can boost compliance:
                   </p>
                   <div className="flex flex-wrap gap-2.5">
@@ -412,7 +412,7 @@ export default function CandidateDashboard() {
                         </span>
                       ))
                     ) : (
-                      <div className="text-sm text-gray-500 py-6 text-center w-full">
+                      <div className="text-sm text-zinc-500 py-6 text-center w-full">
                         <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                         No missing keywords found! Excellent job.
                       </div>
@@ -426,21 +426,21 @@ export default function CandidateDashboard() {
                     <FileCheck className="w-4.5 h-4.5 text-emerald-400 mr-2" />
                     Improvement Checklist
                   </h3>
-                  <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
                     Actionable adjustments to tailor your resume layout, credentials, or copy for this role:
                   </p>
                   <ul className="space-y-3">
                     {selectedAnalysis.analysis_results?.improvement_suggestions?.length > 0 ? (
                       selectedAnalysis.analysis_results.improvement_suggestions.map((tip, idx) => (
-                        <li key={idx} className="flex items-start text-sm text-gray-300">
-                          <span className="w-5 h-5 rounded-full bg-dark-800 border border-gray-700 flex-shrink-0 flex items-center justify-center mr-3 mt-0.5 text-xs text-brand font-bold">
+                        <li key={idx} className="flex items-start text-sm text-zinc-300">
+                          <span className="w-5 h-5 rounded-full bg-dark-800 border border-white/[0.06] flex-shrink-0 flex items-center justify-center mr-3 mt-0.5 text-xs text-brand font-bold">
                             {idx + 1}
                           </span>
                           <span className="leading-relaxed">{tip}</span>
                         </li>
                       ))
                     ) : (
-                      <p className="text-sm text-gray-500 py-6 text-center">No improvements needed.</p>
+                      <p className="text-sm text-zinc-500 py-6 text-center">No improvements needed.</p>
                     )}
                   </ul>
                 </div>
@@ -453,7 +453,7 @@ export default function CandidateDashboard() {
                   <Brain className="w-4.5 h-4.5 text-brand mr-2" />
                   STAR Bullet Points Rewriter
                 </h3>
-                <p className="text-xs text-gray-400 mb-6 leading-relaxed">
+                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
                   The STAR (Situation, Task, Action, Result) layout makes resume descriptions highly quantifiable. 
                   Replace passive items on your resume with these tailored replacements:
                 </p>
@@ -461,18 +461,18 @@ export default function CandidateDashboard() {
                 <div className="space-y-4">
                   {selectedAnalysis.analysis_results?.star_bullet_points?.length > 0 ? (
                     selectedAnalysis.analysis_results.star_bullet_points.map((bp, idx) => (
-                      <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-gray-800/60 text-sm space-y-3">
+                      <div key={idx} className="p-4 rounded-xl bg-dark-950/40 border border-white/[0.08]/60 text-sm space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <span className="text-xs font-semibold text-rose-400 uppercase tracking-wider block mb-1">Original Line</span>
-                            <p className="text-gray-400 italic">"{bp.original}"</p>
+                            <p className="text-zinc-400 italic">"{bp.original}"</p>
                           </div>
                           <div>
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">STAR Alternative</span>
                               <button
                                 onClick={() => handleCopy(bp.rewritten, `star-${idx}`)}
-                                className="text-xs text-gray-500 hover:text-white flex items-center space-x-1"
+                                className="text-xs text-zinc-500 hover:text-white flex items-center space-x-1"
                               >
                                 {copiedField === `star-${idx}` ? (
                                   <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -481,13 +481,13 @@ export default function CandidateDashboard() {
                                 )}
                               </button>
                             </div>
-                            <p className="text-gray-200 font-medium">"{bp.rewritten}"</p>
+                            <p className="text-zinc-200 font-medium">"{bp.rewritten}"</p>
                           </div>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500 py-4 text-center">No bullet rewrites available.</p>
+                    <p className="text-sm text-zinc-500 py-4 text-center">No bullet rewrites available.</p>
                   )}
                 </div>
               </div>
@@ -516,7 +516,7 @@ export default function CandidateDashboard() {
                     )}
                   </button>
                 </div>
-                <div className="p-6 rounded-xl bg-dark-950/60 border border-gray-800 text-sm font-sans leading-relaxed text-gray-300 whitespace-pre-line shadow-inner max-h-[450px] overflow-y-auto">
+                <div className="p-6 rounded-xl bg-dark-950/60 border border-white/[0.08] text-sm font-sans leading-relaxed text-zinc-300 whitespace-pre-line shadow-inner max-h-[450px] overflow-y-auto">
                   {selectedAnalysis.analysis_results?.cover_letter || "Failed to generate cover letter."}
                 </div>
               </div>
@@ -527,7 +527,7 @@ export default function CandidateDashboard() {
                   <Sparkles className="w-4.5 h-4.5 text-accent mr-2" />
                   Tailored Interview Prep
                 </h3>
-                <p className="text-xs text-gray-400 mb-6 leading-relaxed">
+                <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
                   These custom behavioral questions target potential gaps or specific qualifications on your resume:
                 </p>
 
@@ -539,13 +539,13 @@ export default function CandidateDashboard() {
                           <span className="text-brand mr-2">Q{idx + 1}:</span>
                           <span>{q.question}</span>
                         </h4>
-                        <p className="text-xs text-gray-400 leading-relaxed pl-6">
-                          <strong className="text-gray-300">Answer Tip:</strong> {q.why_asked_or_tips}
+                        <p className="text-xs text-zinc-400 leading-relaxed pl-6">
+                          <strong className="text-zinc-300">Answer Tip:</strong> {q.why_asked_or_tips}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500 py-4 text-center">No interview questions generated.</p>
+                    <p className="text-sm text-zinc-500 py-4 text-center">No interview questions generated.</p>
                   )}
                 </div>
               </div>
@@ -559,7 +559,7 @@ export default function CandidateDashboard() {
                 <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center">
                   Resume Optimizer
                 </h1>
-                <p className="text-gray-400 mt-2 text-sm leading-relaxed">
+                <p className="text-zinc-400 mt-2 text-sm leading-relaxed">
                   Paste your target job specs, drag in your resume, and let our AI matching engine run a tailored comparison check.
                 </p>
               </div>
@@ -578,7 +578,7 @@ export default function CandidateDashboard() {
                     className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
                       dragActive ? 'border-brand bg-brand/5 scale-[1.01]' :
                       file ? 'border-brand/40 bg-brand/5 hover:border-brand/60' :
-                      'border-gray-800 hover:border-gray-700 bg-dark-900/40'
+                      'border-white/[0.08] hover:border-white/[0.06] bg-dark-900/40'
                     }`}
                   >
                     <input
@@ -596,7 +596,7 @@ export default function CandidateDashboard() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-white">{file.name}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB &bull; Ready to process</p>
+                          <p className="text-xs text-zinc-500 mt-0.5">{(file.size / 1024 / 1024).toFixed(2)} MB &bull; Ready to process</p>
                         </div>
                         <button
                           type="button"
@@ -604,21 +604,21 @@ export default function CandidateDashboard() {
                             e.stopPropagation();
                             setFile(null);
                           }}
-                          className="px-3 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 border border-gray-700 text-xs text-gray-400 hover:text-white transition-all"
+                          className="px-3 py-1 rounded-lg bg-dark-800 hover:bg-dark-700 border border-white/[0.06] text-xs text-zinc-400 hover:text-white transition-all"
                         >
                           Change File
                         </button>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <div className="w-12 h-12 rounded-xl bg-dark-800/80 border border-gray-800 flex items-center justify-center text-gray-400 mx-auto">
+                        <div className="w-12 h-12 rounded-xl bg-dark-800/80 border border-white/[0.08] flex items-center justify-center text-zinc-400 mx-auto">
                           <Upload className="w-6 h-6" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-300">
+                          <p className="text-sm font-medium text-zinc-300">
                             Drag & drop your resume PDF here, or <span className="text-brand font-semibold">browse files</span>
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">Accepts PDF files only (Max 10MB)</p>
+                          <p className="text-xs text-zinc-500 mt-1">Accepts PDF files only (Max 10MB)</p>
                         </div>
                       </div>
                     )}
@@ -676,7 +676,7 @@ export default function CandidateDashboard() {
             <div>
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-white">Scan History</h3>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-dark-800 text-gray-400 border border-gray-700">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-dark-800 text-zinc-400 border border-white/[0.06]">
                   {history.length}
                 </span>
               </div>
@@ -690,17 +690,17 @@ export default function CandidateDashboard() {
                       className={`p-3 rounded-xl border transition-all duration-200 cursor-pointer flex justify-between items-start text-left group ${
                         selectedAnalysis && selectedAnalysis.id === item.id 
                           ? 'border-brand/40 bg-brand/5' 
-                          : 'border-gray-800 hover:border-gray-700 bg-dark-900/30'
+                          : 'border-white/[0.08] hover:border-white/[0.06] bg-dark-900/30'
                       }`}
                     >
                       <div className="min-w-0 pr-2">
                         <h4 className="text-xs font-bold text-white truncate group-hover:text-brand-light transition-colors">
                           {item.job_title}
                         </h4>
-                        <p className="text-[10px] text-gray-500 truncate mt-1">
+                        <p className="text-[10px] text-zinc-500 truncate mt-1">
                           {item.resume_filename}
                         </p>
-                        <p className="text-[9px] text-gray-600 mt-0.5">
+                        <p className="text-[9px] text-zinc-600 mt-0.5">
                           {formatDate(item.created_at)}
                         </p>
                       </div>
@@ -716,7 +716,7 @@ export default function CandidateDashboard() {
                         
                         <button
                           onClick={(e) => handleDelete(item.id, e)}
-                          className="opacity-0 group-hover:opacity-100 hover:text-rose-400 text-gray-500 transition-all p-1"
+                          className="opacity-0 group-hover:opacity-100 hover:text-rose-400 text-zinc-500 transition-all p-1"
                           title="Delete Scan"
                         >
                           <Trash2 className="w-3 h-3" />
@@ -725,9 +725,9 @@ export default function CandidateDashboard() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-10 border border-dashed border-gray-800 rounded-xl">
-                    <FileText className="w-8 h-8 text-gray-700 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">No scans run yet.</p>
+                  <div className="text-center py-10 border border-dashed border-white/[0.08] rounded-xl">
+                    <FileText className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
+                    <p className="text-xs text-zinc-500">No scans run yet.</p>
                   </div>
                 )}
               </div>
@@ -737,7 +737,7 @@ export default function CandidateDashboard() {
               <div className="pt-4 border-t border-white/5 mt-4">
                 <button
                   onClick={() => setSelectedAnalysis(null)}
-                  className="w-full flex items-center justify-center py-2 rounded-xl text-xs font-medium border border-gray-800 text-gray-400 hover:text-white hover:bg-dark-800 transition-all"
+                  className="w-full flex items-center justify-center py-2 rounded-xl text-xs font-medium border border-white/[0.08] text-zinc-400 hover:text-white hover:bg-dark-800 transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 mr-1.5" />
                   Create New Scan
@@ -751,7 +751,7 @@ export default function CandidateDashboard() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-6 bg-dark-950/20 z-10">
-        <div className="max-w-7xl mx-auto px-6 text-center text-gray-600 text-xs">
+        <div className="max-w-7xl mx-auto px-6 text-center text-zinc-600 text-xs">
           <p>&copy; {new Date().getFullYear()} FixHire Candidate Workspace.</p>
         </div>
       </footer>
